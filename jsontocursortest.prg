@@ -6,81 +6,95 @@ SET DEFAULT TO D:\vfp\Proyectos\qdfoxjson1.8
 
 SET PROCEDURE TO qdfoxJSON
 JSONStart()
+* Tengo que armar con el Json que recibo:
 
-?"JSON Test #7"
-?"Version " + JSON.Version
-?
-?"THIS TEST SHOWS HOW TO ENCODE & DECODE DATA CURSORS IN PRIVATE DATA SESSIONS"
-?
+* Ejemplo:
 
-?"Starting a new datasession..."
-LOCAL oSession
-oSession = CREATEOBJECT("Session")
-SET DATASESSION TO (oSession.dataSessionId)
-??SET("DATASESSION")
+*!*	{
+*!*		jsonschema:'cursor',
+*!*		name:'Q1',
+*!*		rows:[
+*!*			{custid:'0001',custname:'Jacobs, Russell          ',custstat:'Active    '},
+*!*			{custid:'0002',custname:'Metzger, Philip W.       ',custstat:'Active    '},
+*!*			{custid:'0003',custname:'Boddie, John             ',custstat:'Active    '},
+*!*			{custid:'0004',custname:'Sydow, Dan Parks         ',custstat:'Inactive  '},
+*!*			{custid:'0006',custname:'Lloyd, John              ',custstat:'Inactive  '},
+*!*			{custid:'0008',custname:'Thiel, James R.          ',custstat:'Inactive  '},
+*!*			{custid:'0010',custname:'Ingham, Kenneth          ',custstat:'Inactive  '},
+*!*			{custid:'0012',custname:'Wellin, Paul             ',custstat:'Inactive  '},
+*!*			{custid:'0013',custname:'Kamin, Sam               ',custstat:'Active    '},
+*!*			{custid:'0014',custname:'Gaylord, Richard         ',custstat:'Active    '}
+*!*		],
+*!*		schemax:[
+*!*			'CUSTID','C',4,0,false,false,'','','','','','','','','','',0,0,'CUSTNAME',
+*!*			'C',25,0,false,false,'','','','','','','','','','',0,0,'CUSTSTAT','C',10,0,false,false,'','','','','','','','','','',0,0
+*!*		]
+*!*	}
+
+* De una fila
+lJsonRecibido='{codigoPais:1, nombrePais:"ARGENTINA",codigoProvincia:1,nombreProvincia:"SANTA FE"}'
+
+lNombreCursor="cDatos"
+lColeccionDatos='{"custid":"0001","custname":"Jacobs Russell","custstat":"Active"},'+;
+					'{"custid":"0002","custname":"Metzger Philip W.","custstat":"Active    "},'+;
+					'{"custid":"0003","custname":"Boddie John             ","custstat":"Active"},'+;
+					'{"custid":"0004","custname":"Sydow Dan Parks         ","custstat":"Inactive  "},'+;
+					'{"custid":"0006","custname":"Lloyd John              ","custstat":"Inactive  "},'+;
+					'{"custid":"0008","custname":"Thiel James R.          ","custstat":"Inactive  "},'+;
+					'{"custid":"0010","custname":"Ingham Kenneth          ","custstat":"Inactive  "},'+;
+					'{"custid":"0012","custname":"Wellin Paul             ","custstat":"Inactive  "},'+;
+					'{"custid":"0013","custname":"Kamin Sam               ","custstat":"Active    "},'+;
+					'{"custid":"0014","custname":"Gaylord Richard         ","custstat":"Active    "}'
+
+* Para cada columna del Cursor a crear
+* array de definicion de columnas de datos
+DECLARE aDefiniciones(3)
+
+aDefiniciones(1)=CREATEOBJECT("DefinicionColumna","CUSTID","C",4,0)
+aDefiniciones(2)=CREATEOBJECT("DefinicionColumna","CUSTNAME","C",25,0)
+aDefiniciones(3)=CREATEOBJECT("DefinicionColumna","CUSTSTAT","C",10,0)
+
+lLongitud=ALEN(aDefiniciones)
+lDefinicionCadena=""
+lIndice=1
+FOR EACH lDefinicionColumna IN aDefiniciones
+	lDefinicionCadena = lDefinicionCadena +;
+				'"' + lDefinicionColumna.nombreCampo + '","' + lDefinicionColumna.tipoDatoVFP + '","' + ALLTRIM(STR(lDefinicionColumna.longitud)) +;
+				'","' + ALLTRIM(STR(lDefinicionColumna.decimales)) + '" ' + ;
+				' ,false,false,"","","","","","","","","","",0,0 ' + IIF(lIndice<>lLongitud,",","" )
+	lIndice = lIndice + 1
+
+ENDFOR
 
 
-?"Creating data cursor..."
-USE customers
-SELECT * FROM customers INTO CURSOR Q1 NOFILTER
-USE IN customers
-??"Done!!"
-
-SELECT Q1
-?"","Records:",RECCOUNT()
-GO TOP
-?"","First record:",custId,custName,custStat
-GO BOTTOM
-?"","Last record:",custId,custName,custStat
+lJson='{"jsonschema":"cursor","name":"' + lNombreCursor + '",' + '"rows":[' + lColeccionDatos + ' ],' + '"schemax":[' + lDefinicionCadena + ']}'
 
 
-?
-?"Encoding data cursor..."
-cJSON = JSON.encodeCursor("Q1", SET("DATASESSION"))
-
-CREATE CURSOR cJeison(valor memo)
-INSERT INTO cJeison(valor) VALUES(cJSON)
+CREATE CURSOR cJsonaCursear(json memo)
+INSERT INTO cJsonaCursear(json) VALUES(lJson)
 
 BROWSE
-SET STEP ON
 
-lJson="{jsonschema:'cursor',name:'cDatos',"+;
-"rows:[{custid:'0001',custname:'Jacobs, Russell',custstat:'Active'},"+;
-"{custid:'0002',custname:'Metzger, Philip W.',custstat:'Active    '},"+;
-"{custid:'0003',custname:'Boddie, John             ',custstat:'Active'},"+;
-"{custid:'0004',custname:'Sydow, Dan Parks         ',custstat:'Inactive  '},"+;
-"{custid:'0006',custname:'Lloyd, John              ',custstat:'Inactive  '},"+;
-"{custid:'0008',custname:'Thiel, James R.          ',custstat:'Inactive  '},"+;
-{custid:'0010',custname:'Ingham, Kenneth          ',custstat:'Inactive  '},{custid:'0012',custname:'Wellin, Paul             ',custstat:'Inactive  '},{custid:'0013',custname:'Kamin, Sam               ',custstat:'Active    '},{custid:'0014',custname:'Gaylord, Richard         ',custstat:'Active    '}],schemax:['CUSTID','C',4,0,false,false,'','','','','','','','','','',0,0,'CUSTNAME','C',25,0,false,false,'','','','','','','','','','',0,0,'CUSTSTAT','C',10,0,false,false,'','','','','','','','','','',0,0]}
+JSON.parseCursor(lJson,,SET("DATASESSION"))
 
 
-??"Done!!"
-?"",LEFT(cJSON,80)+"..."
+lSentencia = "SELECT " + lNombreCursor
+&lSentencia
+BROWSE
 
 
+DEFINE CLASS DefinicionColumna AS Custom
 
-?
-?"Closing data cursor..."
-USE IN Q1
-??"Done!!"
+	nombreCampo=""
+	tipoDatoVFP=""
+	longitud=0
+	decimales=0
 
-?
-?"Recreating data cursor..."
-JSON.parseCursor(cJSON,,SET("DATASESSION"))
-??"Done!!"
-
-SELECT Q1
-?"","Records:",RECCOUNT()
-GO TOP
-?"","First record:",custId,custName,custStat
-GO BOTTOM
-?"","Last record:",custId,custName,custStat
-
-USE IN Q1 
-?
-?"Test completed"
-?
-?"For more information, read initial comments at qdfoxJSON.PRG file"
-
-RETURN
-
+	PROCEDURE INIT(pNombreCampo, pTipoDatoVFP, pLongitud, pDecimales)
+		THIS.nombreCampo=pNombreCampo
+		THIS.tipoDatoVFP=pTipoDatoVFP
+		THIS.longitud=pLongitud
+		THIS.decimales=pDecimales
+	ENDPROC
+	
+ENDDEFINE
