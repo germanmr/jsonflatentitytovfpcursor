@@ -31,6 +31,84 @@ JSONStart()
 *!*		]
 *!*	}
 
+*!*	{
+*!*	respuestaComunicacion: {
+*!*	idTransaccion: 8445
+*!*	respuestaBase: {
+*!*	tiposRespuestaValidacion: "OK"
+*!*	mensaje: ""
+*!*	}-
+*!*	}-
+*!*	autorizadas: [399]
+*!*	0:  {
+*!*	baseAmbulatorio: {
+*!*	ID: "A02-R34-R85"
+*!*	afiliado: {
+*!*	ID: "000000038132293"
+*!*	nombre: "GONZALEZ ROXANA L"
+*!*	convenio: {
+*!*	ID: 1
+*!*	nombre: "IAPOS"
+*!*	}-
+*!*	plan: {
+*!*	ID: 1
+*!*	nombre: "Dpto ROSARIO"
+*!*	}-
+*!*	}-
+*!*	prestador: {
+*!*	codigoProfesion: 4
+*!*	matricula: 64758
+*!*	libro: " "
+*!*	folio: " "
+*!*	}-
+*!*	efector: {
+*!*	ID: {
+*!*	codigoProfesion: 1
+*!*	matricula: 1
+*!*	libro: " "
+*!*	folio: " "
+*!*	}-
+*!*	nombre: "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"
+*!*	}-
+*!*	prescriptor: {
+*!*	ID: {
+*!*	codigoProfesion: 1
+*!*	matricula: 1
+*!*	libro: " "
+*!*	folio: " "
+*!*	}-
+*!*	nombre: "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"
+*!*	}-
+*!*	fechaPrestacion: "2014/07/01"
+*!*	}-
+*!*	prestacionesRealizadas: [1]
+*!*	0:  {
+*!*	prestacionSolicitadaBase: {
+*!*	nomencladorBase: {
+*!*	codigoNomenclador: "420601"
+*!*	ID: "420601"
+*!*	Nombre: "CONSULTA GUARDIA MEDICA"
+*!*	}-
+*!*	cantidad: 1
+*!*	}-
+*!*	importePrestacion: {
+*!*	moneda: {
+*!*	ID: 5
+*!*	nombre: "Ordenes Consultas"
+*!*	}-
+*!*	coseguro: 1
+*!*	coseguroIva: 0
+*!*	coseguroPorcentaje: 0
+*!*	honorarios: 0
+*!*	derechos: 0
+*!*	iva: 0
+*!*	coseguroTexto: "1 Orden Consulta"
+*!*	}-
+*!*	}-
+*!*	-
+*!*	fechaAutorizacion: "2014/07/01"
+*!*	}
+
 * De una fila
 lJsonRecibido='{codigoPais:1, nombrePais:"ARGENTINA",codigoProvincia:1,nombreProvincia:"SANTA FE"}'
 
