@@ -1,29 +1,58 @@
 
 
-* Primero obtengo la cantidad de registros
-*  Ejemplo:
-
+* TODO
+* Le puedo pasar un array con los nombres de algunos campos de json y con el tipo de dato????
 
 SET DEFAULT TO d:\vfp\proyectos\jsonflatentitytovfpcursor
 
 LOCAL pcJSON
-
-* Bien!!!!!!!
-*pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descri":"Casa","numero":123}}'
-*pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
-*pcjson = '{"employees":[{"firstName":"Primero", "lastName":"perez"},{"firstName":"segundo", "lastName":"Gonzalez"}]}'
-*pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-*pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
-
-*pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
-*		'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-
 LOCAL oConversor
 
 oConversor=CREATEOBJECT("Conversor")
-=oConversor.claseACursor(pcJSON)
 
+* Bien!!!!!!!
+*!*	pcJSON='{"nombre":"German","apellido":"muñoz"}'
+
+*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	BROWSE
+
+*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
+
+*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	BROWSE
+
+*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
+
+*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	BROWSE
+
+*!*	pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
+
+*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	BROWSE
+
+*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	BROWSE
+
+pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+
+=oConversor.jsonToCursor(pcJSON)
 BROWSE
+
+*!*	pcjson = '{"employees":[{"firstName":"Primero", "lastName":"perez"},{"firstName":"segundo", "lastName":"Gonzalez"}]}'
+
+*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	BROWSE
+
+*!*	pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
+*!*			'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+
+*!*	=oConversor.jsonToCursor(pcJSON)
+
+*!*	BROWSE
+
+* Tengo que crear un cursor/tabla para cada caso de prueba!!
+*lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
 
 DEFINE CLASS Conversor AS CUSTOM
 
@@ -33,23 +62,30 @@ DEFINE CLASS Conversor AS CUSTOM
 	columnacreada=.F.
 	esunobjeto=.F.
 	nombrecursor="cDatos"
+	nombreprefijo=""
 	
 	
-	PROCEDURE claseACursor(pcJSON)
+	PROCEDURE jsonToCursor(pcJSON)
+		
+		*Preparo la zona de datos
 		SET SAFETY OFF
 		CLOSE DATABASES
-		*DELETE DATABASE pruebas
 		CREATE DATABASE pruebas
-		IF USED("cDatos") THEN
-			SELECT cDatos
+		IF USED(THIS.nombrecursor) THEN
+			LOCAL lNombreCursor
+			SELECT &lNombreCursor.
 			USE
 		ENDIF
 		
-		CREATE TABLE cDatos(campo1 C(1))
+		lSentencia = "CREATE TABLE " + THIS.nombreCursor + " (campo1 C(1))"
+		&lSentencia
 		
 		THIS.Parse(pcJSON)
 		
-		ALTER TABLE cDatos DROP COLUMN campo1
+		* Limpio la zona de datos, si no hay otros campos mato el alias!!
+		*CLOSE DATABASES??
+		lSentencia = "ALTER TABLE " + THIS.nombrecursor  + " DROP COLUMN campo1"
+		&lSentencia
 		
 	ENDPROC
 	
@@ -60,20 +96,11 @@ DEFINE CLASS Conversor AS CUSTOM
 		LOCAL oObjects, i, oResult, lIsArray, lIsVFP, cVFPClass
 		STORE .F. TO lIsArray
 
-		DO CASE
-			* Si es un array lo manda a json array
-			CASE LEFT(pcJSON,1) = "["
-	            lISArray = .T.
-	            THIS.estoyenarray=.T.
-	            oResult = JSONArray()
-	            
-	        OTHERWISE 
-	             #IF VERSION(5) >= 800
-					oResult = CREATEOBJECT("Empty")         
-	             #ELSE
-					oResult = CREATEOBJECT("JSONEmpty")
-	             #ENDIF
-		ENDCASE
+		* Si es un array lo manda a json array
+		IF LEFT(pcJSON,1) = "[" THEN
+            lISArray = .T.
+            THIS.estoyenarray=.T.
+		ENDIF
 	     
 		pcJSON = SUBSTR(pcJSON,2,LEN(pcJSON) - 2) 
 	     
@@ -94,9 +121,10 @@ DEFINE CLASS Conversor AS CUSTOM
 				IF THIS.estoyenarray AND !THIS.columnacreada THEN
 					THIS.columnacreada=.F.
 				ENDIF
-				oResult.Add(THIS.Parse(cObj))
+				*oResult.Add(THIS.Parse(cObj))
+				* ESto es para cada objeto, 
+				THIS.Parse(cObj)
 				* La primera vez que pasa por aqui ya creo todas las columnas
-				*THIS.esunobjeto=.T.
 				THIS.columnacreada=.T.
 				* Continuamos con el resto de los objectos
 				LOOP
@@ -104,12 +132,6 @@ DEFINE CLASS Conversor AS CUSTOM
 
 			* Tomo los pares simples de valores
 			oPairs = THIS._Split(cObj)
-
-			#IF VERSION(5) >= 800
-				oObj = CREATEOBJECT("Empty")
-			#ELSE
-				oObj = CREATEOBJECT("JSONEmpty")
-			#ENDIF
 			
 			FOR j = 1 TO oPairs.Count
 				
@@ -153,34 +175,47 @@ DEFINE CLASS Conversor AS CUSTOM
 						uValue = NULL
 	                
 					CASE LEFT(cValue,1) = [{]   && Object
+						* Agregoa a menos que este adentrode otro objeto??
+						lNombreCursor= THIS.nombrecursor
+						SELECT &lNombreCursor.
+						* Si ha hay un registro no toco nada
+						IF RECCOUNT(THIS.nombrecursor) =0 THEN
+							APPEND BLANK
+						ENDIF
+						THIS.nombreprefijo=""
 						uValue = THIS.Parse(cValue)
-						THIS.esunobjeto=.T.
+						THIS.nombreprefijo=""
+						LOOP
+						*THIS.esunobjeto=.T.
 	               
 					CASE LEFT(cValue,1) = "["   && Array
 						THIS.estoyenarray=.T.
 						THIS.columnacreada=.F.
+						THIS.nombreprefijo=""
 						uValue = THIS.Parse(cValue)
 						THIS.columnacreada=.F.
+						THIS.nombreprefijo=""
 						* No tengo que hacer mas nada luego abajo de salir del array
 						LOOP
 						
 						
 					OTHERWISE                   && Numeric value
 						uValue = VAL(STRTRAN(cValue, ".", SET("POINT")))  && JuanPa, Abril 13 2012
-						lTipoDato = "N(4)"
+						lTipoDato = "N(12)"
 
 				ENDCASE
 
 				DO CASE
-					
 					*CASE THIS.estoyenarray
-					CASE lIsArray
+					* TODO ,sacar esto!!!!
+					CASE lIsArray AND !THIS.estoyenarray
 						*THIS.estoyenarray=.F.
 						*oResult.Add(uValue)
+						acanotienequeentrar= 1/0
 					
 					* Si es un objeto sigo las demas propiedades, porque ya lo parsee y cree las columnas
-					CASE THIS.esunobjeto=.T.
-						THIS.esunobjeto=.F.
+					*CASE THIS.esunobjeto=.T.
+						*THIS.esunobjeto=.F.
 						*THIS.columnacreada=.F.
 						
 					OTHERWISE
@@ -190,43 +225,42 @@ DEFINE CLASS Conversor AS CUSTOM
 						IF !THIS.estoyenarray THEN
 							LOCAL lSentencia
 							SELECT cDatos
-							lNombreColumna=THIS.obtenerNombreUnicoColumna(cProp)
+							lNombreColumna=THIS.obtenerNombreUnicoColumna(THIS.nombreprefijo + cProp)
 							lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
 							&lSentencia
+							
+							IF RECCOUNT(THIS.nombrecursor)=0 THEN
+								APPEND BLANK
+							ENDIF
 							
 							LOCAL lSentencia
 							lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " ALL "
 							&lSentencia
 						ELSE
 							IF !THIS.columnacreada THEN
-								LOCAL lSentencia
-								SELECT cDatos
-								lNombrecolumna=THIS.obtenerNombreUnicoColumna(cProp)
+								LOCAL lSentencia,lNombreCursor
+								lNombreCursor = THIS.nombrecursor
+								SELECT &lNombreCursor.
+								lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
+								*THIS.nombreColumna = lNombreColumna
 								lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
 								&lSentencia
 							ENDIF
-
-							*APPEND BLANK
+							
+							APPEND BLANK
 
 							*lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
 							*&lSentencia
 							
 						ENDIF
-						
-						
+
 				ENDCASE
 
 			ENDFOR
 	      
 		ENDFOR
 		
-*!*			LOCAL ARRAY aCampos(1)
-*!*			SELECT cDatos
-*!*			AFIELDS(aCampos(1))
-		*lSentencia= "ALTER TABLE " + THIS.nombrecursor + " DROP COLUMN campo1 "
-		*&lSentencia
-		
-		RETURN oResult
+		*RETURN oResult
 	     *
 	ENDPROC
 
@@ -294,7 +328,9 @@ DEFINE CLASS Conversor AS CUSTOM
 	PROCEDURE obtenerNombreUnicoColumna	
 			LPARAMETERS pNombreColumna
 			
-			LOCAL aCampos[1], lNombreCursor
+			LOCAL aCampos[1], lNombreCursor, lNombreColumna
+			
+			lNombreColumna = ALLTRIM(THIS.nombreprefijo) + ALLTRIM(pNombreColumna)
 			
 			lNombreCursor = THIS.nombrecursor
 			SELECT &lNombreCursor.
@@ -415,3 +451,81 @@ DEFINE CLASS JSONEmpty AS Custom
 		ENDIF
 	ENDPROC
 ENDDEFINE
+
+
+
+PROCEDURE equalscursor(pCursorObtenido,pCursorEsperado)
+	
+	IF !USED(pCursorObtenido) THEN
+		? "El alias: " + pCursorObtenido + " no esta en uso"
+		RETURN .F.
+	ENDIF
+
+	IF !USED(lCursorObtenido) THEN
+		? "El alias: " + pCursorObtenido + " no esta en uso"
+		RETURN .F.
+	ENDIF
+	
+	* Estructura
+	LOCAL ARRAY aCamposObtenido[1,1]
+	LOCAL ARRAY aCamposEsperado[1,1]
+	LOCAL campo, lCantidadObtenido, lCantidadEsperado
+	
+	lCantidadObtenido = AFIELDS(aCamposObtenido,pCursorObtenido)
+	lCantidadEsperado = AFIELDS(aCamposEsperado,pCursorEsperado)
+	
+	IF lCantidadEsperado <> lCantidadObtenido THEN
+		? "Los cursores no tiene la misma cantidad de campos, Esperado: " + ALLTRIM(STR(lCantidadEsperado)) + ", obtenido: " + ALLTRIM(STR(lCantidadObtenido))
+		RETURN .F.
+	ENDIF
+	
+	FOR i = TO lCantidadObtenido
+		IF LOWER(aCamposObtenido[i,1])<> LOWER(aCamposEsperado[i,1]) THEN
+			? "El campo numero: "+ALLTRIM(STR(i))+" esta mal, valor esperado: " +ALLTRIM(aCamposObtenido[i,1]) + " valor obtenido: " + aCamposEsperado[i,1]
+			RETURN .F.
+		ENDIF
+	ENDFOR
+	
+	* Valores
+	LOCAL lCantidadObtenido
+	SELECT &pCursorObtenido.
+	COUNT TO lCantidadObtenido
+
+	LOCAL lCantidadEsperado
+	SELECT &pCursorEsperado.
+	COUNT TO lCantidadEsperado
+	
+	IF lCantidadObtenido<>lCantidadEsperado THEN
+		? "Cantidad de registro disinta, esperada: " + ALLTRIM(STR(lCantidadEsperado)) + " obtenido: "+ ALLTRIM(STR(lCantidadObtenido))
+		RETURN .F.
+	ENDIF
+	
+	SELECT &pCursorEsperado.
+	* Para cada fila
+	SCAN
+	
+		FOR i=1 TO lCantidadEsperado
+			lEsperado = pCursorObtenido.&aCamposObtenido[i,1].
+			lObtenido = pCursorEsperado.&aCamposEsperado[i,1].
+			IF lEsperado<>lObtenido THEN
+				? "El valor del campo esta mal"
+				? "Esperado:"
+				?lEsperado
+				? "Obtenido"
+				? lObtenido
+				RETURN .F.
+			ENDIF
+		ENDFOR
+		
+	ENDFOR
+	
+	RETURN .T.
+
+ENDPROC
+
+
+
+
+
+
+
