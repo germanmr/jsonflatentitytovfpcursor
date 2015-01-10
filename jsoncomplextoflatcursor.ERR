@@ -1,0 +1,5 @@
+FOR i = TO lCantidadObtenido
+Error in line 489: Syntax error.
+ENDFOR
+Error in line 527: There is a missing keyword in the FOR...ENDFOR or DO CASE...ENDCASE command structure.
+Error in line 531: Nesting error.
