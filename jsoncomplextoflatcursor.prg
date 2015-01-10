@@ -12,15 +12,11 @@ oConversor=CREATEOBJECT("Conversor")
 
 * Bien!!!!!!!
 *!*	pcJSON='{"nombre":"German","apellido":"muñoz"}'
-
 *!*	=oConversor.jsonToCursor(pcJSON)
 *!*	BROWSE
-
 *!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
-
 *!*	=oConversor.jsonToCursor(pcJSON)
 *!*	BROWSE
-
 *!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
 
 *!*	=oConversor.jsonToCursor(pcJSON)
@@ -34,7 +30,24 @@ oConversor=CREATEOBJECT("Conversor")
 *!*	=oConversor.jsonToCursor(pcJSON)
 *!*	BROWSE
 
-pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+* Si aplano la entidad me queda como una fila
+
+*!*	pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+
+*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	BROWSE
+
+*!*	pcjson='{tiposRespuestaValidacion: "OK",mensaje: "Hay comunicacion"}'
+*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	BROWSE
+
+pcjson= '{"respuestaComunicacion":{"idTransaccion":316,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
+		'"respuestaElegibilidadAfiliado":{"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""},"detalleElegibilidadAfiliado":{'+;
+		'"afiliado":{"ID":"32165478","nombre":"PEREZ JUAN","convenio":{"ID":1,"nombre":"IAPOS"},"plan":{"ID":1,"nombre":"Dpto ROSARIO"}},'+;
+		'"modoIngresoAfiliado":"M","observaciones":""}}}'
+
+* respuestaComunicacion, idTransaccion, respuestaBase, tiposRespuestaValidacion, mensaje, respuestaElegibilidadAfiliado, estadoGeneral, tiposRespuestaValidacion, mensaje,
+* ID, nombre, ID, nombre, ID, nombre, modoIngresoAfiliado, observaciones
 
 =oConversor.jsonToCursor(pcJSON)
 BROWSE
@@ -77,6 +90,7 @@ DEFINE CLASS Conversor AS CUSTOM
 			USE
 		ENDIF
 		
+		LOCAL lSentencia
 		lSentencia = "CREATE TABLE " + THIS.nombreCursor + " (campo1 C(1))"
 		&lSentencia
 		
@@ -84,7 +98,7 @@ DEFINE CLASS Conversor AS CUSTOM
 		
 		* Limpio la zona de datos, si no hay otros campos mato el alias!!
 		*CLOSE DATABASES??
-		lSentencia = "ALTER TABLE " + THIS.nombrecursor  + " DROP COLUMN campo1"
+		lSentencia = "ALTER TABLE " + THIS.nombrecursor  + " DROP COLUMN campo1"
 		&lSentencia
 		
 	ENDPROC
@@ -205,63 +219,46 @@ DEFINE CLASS Conversor AS CUSTOM
 
 				ENDCASE
 
-				DO CASE
-					*CASE THIS.estoyenarray
-					* TODO ,sacar esto!!!!
-					CASE lIsArray AND !THIS.estoyenarray
-						*THIS.estoyenarray=.F.
-						*oResult.Add(uValue)
-						acanotienequeentrar= 1/0
+				IF !THIS.estoyenarray THEN
+					LOCAL lSentencia
+					SELECT cDatos
+					lNombreColumna=THIS.obtenerNombreUnicoColumna(THIS.nombreprefijo + cProp)
+					lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
+					&lSentencia
 					
-					* Si es un objeto sigo las demas propiedades, porque ya lo parsee y cree las columnas
-					*CASE THIS.esunobjeto=.T.
-						*THIS.esunobjeto=.F.
-						*THIS.columnacreada=.F.
-						
-					OTHERWISE
-						*ADDPROPERTY(oResult,cProp,uValue)
-						* Si es una propiedad simple
-						* Puedo crear una columna
-						IF !THIS.estoyenarray THEN
-							LOCAL lSentencia
-							SELECT cDatos
-							lNombreColumna=THIS.obtenerNombreUnicoColumna(THIS.nombreprefijo + cProp)
-							lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
-							&lSentencia
-							
-							IF RECCOUNT(THIS.nombrecursor)=0 THEN
-								APPEND BLANK
-							ENDIF
-							
-							LOCAL lSentencia
-							lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " ALL "
-							&lSentencia
-						ELSE
-							IF !THIS.columnacreada THEN
-								LOCAL lSentencia,lNombreCursor
-								lNombreCursor = THIS.nombrecursor
-								SELECT &lNombreCursor.
-								lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
-								*THIS.nombreColumna = lNombreColumna
-								lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
-								&lSentencia
-							ENDIF
-							
-							APPEND BLANK
+					IF RECCOUNT(THIS.nombrecursor)=0 THEN
+						APPEND BLANK
+						*BROWSE
+					ENDIF
+					
+					LOCAL lSentencia
+					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " ALL "
+					&lSentencia
+					*BROWSE
+				ELSE
+					IF !THIS.columnacreada THEN
+						LOCAL lSentencia,lNombreCursor
+						lNombreCursor = THIS.nombrecursor
+						SELECT &lNombreCursor.
+						lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
+						*THIS.nombreColumna = lNombreColumna
+						lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
+						&lSentencia
+					ENDIF
+					
+					APPEND BLANK
 
-							*lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
-							*&lSentencia
-							
-						ENDIF
-
-				ENDCASE
+					*lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
+					*&lSentencia
+					
+				ENDIF
 
 			ENDFOR
 	      
 		ENDFOR
 		
 		*RETURN oResult
-	     *
+
 	ENDPROC
 
 	PROCEDURE _Split(pcJSON)
@@ -325,12 +322,17 @@ DEFINE CLASS Conversor AS CUSTOM
 		RETURN VARTYPE(pcString)="C" AND LEFT(pcString,1)="{" AND RIGHT(pcString,1)="}"
 	ENDPROC
 
-	PROCEDURE obtenerNombreUnicoColumna	
+	PROCEDURE obtenerNombreUnicoColumna
 			LPARAMETERS pNombreColumna
 			
-			LOCAL aCampos[1], lNombreCursor, lNombreColumna
+			LOCAL ARRAY aCampos[1]
+			LOCAL lNombreCursor, lNombreColumna, lCantidadCampos, lRepeticiones, indice
 			
 			lNombreColumna = ALLTRIM(THIS.nombreprefijo) + ALLTRIM(pNombreColumna)
+			
+			IF LOWER(lNombreColumna) = 'id'
+				*SET STEP ON
+			ENDIF			
 			
 			lNombreCursor = THIS.nombrecursor
 			SELECT &lNombreCursor.
@@ -338,15 +340,19 @@ DEFINE CLASS Conversor AS CUSTOM
 			lCantidadCampos=AFIELDS(aCampos,THIS.nombrecursor)
 			lRepeticiones = 0
 			FOR indice=1 TO lCantidadCampos
-				IF  LOWER(ALLTRIM(pNombreColumna)) = LOWER(ALLTRIM(aCampos[indice,1])) THEN
+				* Tengo que buscar el nombre del campo con las repeticiones que tenga
+				* Si ya se repitio supongo asumo que fue creado con el numero de repeticion en el nombre
+				LOCAL lCampoABuscar
+				lCampoABuscar =  lNombreColumna + IIF(lRepeticiones>0, ALLTRIM(STR(lRepeticiones)),"")
+				
+				IF LOWER( lCampoABuscar ) = LOWER(aCampos[indice,1]) THEN
 					lRepeticiones = lRepeticiones + 1
 				ENDIF	
 			ENDFOR
 			IF lRepeticiones > 0 THEN
-				lRepeticiones = lRepeticiones + 1
-				RETURN ALLTRIM(pNombreColumna) + ALLTRIM(STR(lRepeticiones))
+				RETURN lNombreColumna + ALLTRIM(STR(lRepeticiones))
 			ELSE
-				RETURN ALLTRIM(pNombreColumna)
+				RETURN lNombreColumna
 			ENDIF
 
 	ENDPROC
