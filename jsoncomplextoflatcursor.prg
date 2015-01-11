@@ -11,35 +11,35 @@ LOCAL oConversor
 oConversor=CREATEOBJECT("Conversor")
 
 * Bien!!!!!!!
-*!*	*!*	pcJSON='{"nombre":"German","apellido":"muñoz"}'
-*!*	*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	*!*	BROWSE
+pcJSON='{"nombre":"German","apellido":"muñoz"}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
-*!*	*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	*!*	BROWSE
+pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
-*!*	*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	*!*	BROWSE
+pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	*!*	pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
-*!*	*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	*!*	BROWSE
+pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	*!*	* Si aplano la entidad me queda como una fila
+* Si aplano la entidad me queda como una fila
 
-*!*	*!*	pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-*!*	*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	*!*	BROWSE
+pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	*!*	pcjson = '{"employees":[{"firstName":"Primero", "lastName":"perez"},{"firstName":"segundo", "lastName":"Gonzalez"}]}'
-*!*	*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	*!*	BROWSE
+pcjson = '{"employees":[{"firstName":"Primero", "lastName":"perez"},{"firstName":"segundo", "lastName":"Gonzalez"}]}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	*!*	pcjson='{tiposRespuestaValidacion: "OK",mensaje: "Hay comunicacion"}'
-*!*	*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	*!*	BROWSE
+pcjson='{tiposRespuestaValidacion: "OK",mensaje: "Hay comunicacion"}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
 pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
 		'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
@@ -68,8 +68,18 @@ DEFINE CLASS Conversor AS CUSTOM
 	agregoregistro=.F.
 	
 	
+	PROCEDURE inicializaratributos()
+			THIS.estoyenarray=.F.
+			THIS.columnacreada=.F.
+			THIS.esunobjeto=.F.
+			THIS.nombrecursor="cDatos"
+			THIS.nombreprefijo=""
+			THIS.agregoregistro=.F.
+	ENDPROC
+	
 	PROCEDURE jsonToCursor(pcJSON)
 		
+		THIS.inicializaratributos()
 		*Preparo la zona de datos
 		SET SAFETY OFF
 		CLOSE DATABASES
@@ -135,10 +145,15 @@ DEFINE CLASS Conversor AS CUSTOM
 				lNombreCursor= THIS.nombrecursor
 				SELECT &lNombreCursor.
 
-				* Si hay un registro no toco nada
+				* Si hay un registro no toco nada, si no hay registros tengo que agregar
 				IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor) > 0 THEN
 					APPEND BLANK
 					THIS.agregoregistro=.F.
+				ELSE
+					IF RECCOUNT(THIS.nombrecursor) = 0 THEN
+						APPEND BLANK
+						THIS.agregoregistro=.F.
+					ENDIF
 				ENDIF
 				* ESto es para cada objeto, 
 				THIS.Parse(cObj)
@@ -224,23 +239,7 @@ DEFINE CLASS Conversor AS CUSTOM
 
 				ENDCASE
 
-				IF !THIS.estoyenarray THEN
-					LOCAL lSentencia
-					SELECT cDatos
-					lNombreColumna=THIS.obtenerNombreUnicoColumna(cProp)
-					lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
-					&lSentencia
-					
-					IF THIS.agregoregistro OR RECCOUNT(THIS.nombrecursor)=0 THEN
-					*IF THIS.agregoregistro THEN
-						APPEND BLANK
-						THIS.agregoregistro=.F.
-					ENDIF
-					
-					LOCAL lSentencia
-					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " ALL "
-					&lSentencia
-				ELSE
+				IF THIS.estoyenarray THEN
 					
 					* Esto es para cada atributo de que tenga valor "simple" de una cadena json
 					LOCAL lSentencia,lNombreCursor
@@ -255,6 +254,22 @@ DEFINE CLASS Conversor AS CUSTOM
 
 					* Reemplazo en base al nombre que deberia tener!!!!
 					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
+					&lSentencia
+
+				ELSE && Cuando no estoy en un array
+					LOCAL lSentencia
+					SELECT cDatos
+					lNombreColumna=THIS.obtenerNombreUnicoColumna(cProp)
+					lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
+					&lSentencia
+					
+					IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor)=0 THEN
+						APPEND BLANK
+						THIS.agregoregistro=.F.
+					ENDIF
+					
+					LOCAL lSentencia
+					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " ALL "
 					&lSentencia
 
 				ENDIF
