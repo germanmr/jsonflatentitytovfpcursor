@@ -11,58 +11,47 @@ LOCAL oConversor
 oConversor=CREATEOBJECT("Conversor")
 
 * Bien!!!!!!!
-*!*	pcJSON='{"nombre":"German","apellido":"muñoz"}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
-*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
-*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
+*!*	*!*	pcJSON='{"nombre":"German","apellido":"muñoz"}'
+*!*	*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	*!*	BROWSE
 
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+*!*	*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
+*!*	*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	*!*	BROWSE
 
-*!*	pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
+*!*	*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
+*!*	*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	*!*	BROWSE
 
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+*!*	*!*	pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
+*!*	*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	*!*	BROWSE
 
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+*!*	*!*	* Si aplano la entidad me queda como una fila
 
-* Si aplano la entidad me queda como una fila
+*!*	*!*	pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+*!*	*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	*!*	BROWSE
 
-*!*	pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+*!*	*!*	pcjson = '{"employees":[{"firstName":"Primero", "lastName":"perez"},{"firstName":"segundo", "lastName":"Gonzalez"}]}'
+*!*	*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	*!*	BROWSE
 
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+*!*	*!*	pcjson='{tiposRespuestaValidacion: "OK",mensaje: "Hay comunicacion"}'
+*!*	*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	*!*	BROWSE
 
-*!*	pcjson='{tiposRespuestaValidacion: "OK",mensaje: "Hay comunicacion"}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
+		'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
 pcjson= '{"respuestaComunicacion":{"idTransaccion":316,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
 		'"respuestaElegibilidadAfiliado":{"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""},"detalleElegibilidadAfiliado":{'+;
 		'"afiliado":{"ID":"32165478","nombre":"PEREZ JUAN","convenio":{"ID":1,"nombre":"IAPOS"},"plan":{"ID":1,"nombre":"Dpto ROSARIO"}},'+;
 		'"modoIngresoAfiliado":"M","observaciones":""}}}'
-
-* respuestaComunicacion, idTransaccion, respuestaBase, tiposRespuestaValidacion, mensaje, respuestaElegibilidadAfiliado, estadoGeneral, tiposRespuestaValidacion, mensaje,
-* ID, nombre, ID, nombre, ID, nombre, modoIngresoAfiliado, observaciones
-
 =oConversor.jsonToCursor(pcJSON)
 BROWSE
-
-*!*	pcjson = '{"employees":[{"firstName":"Primero", "lastName":"perez"},{"firstName":"segundo", "lastName":"Gonzalez"}]}'
-
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
-
-*!*	pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
-*!*			'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-
-*!*	=oConversor.jsonToCursor(pcJSON)
-
-*!*	BROWSE
 
 * Tengo que crear un cursor/tabla para cada caso de prueba!!
 *lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
@@ -76,6 +65,7 @@ DEFINE CLASS Conversor AS CUSTOM
 	esunobjeto=.F.
 	nombrecursor="cDatos"
 	nombreprefijo=""
+	agregoregistro=.F.
 	
 	
 	PROCEDURE jsonToCursor(pcJSON)
@@ -111,10 +101,15 @@ DEFINE CLASS Conversor AS CUSTOM
 		STORE .F. TO lIsArray
 
 		* Si es un array lo manda a json array
-		IF LEFT(pcJSON,1) = "[" THEN
-            lISArray = .T.
-            THIS.estoyenarray=.T.
-		ENDIF
+		DO CASE
+			CASE LEFT(pcJSON,1) = "["
+	            lISArray = .T.
+	            THIS.estoyenarray=.T.
+	            
+			CASE LEFT(pcJSON,1) = [{]
+				THIS.agregoregistro = .T.
+
+		ENDCASE
 	     
 		pcJSON = SUBSTR(pcJSON,2,LEN(pcJSON) - 2) 
 	     
@@ -129,15 +124,25 @@ DEFINE CLASS Conversor AS CUSTOM
 			IF EMPTY(cObj) THEN
 				LOOP
 			ENDIF
-	      
+
 			IF lIsArray AND THIS.IsObject(cObj)
 				* Aca Tiene un objeto del array
 				IF THIS.estoyenarray AND !THIS.columnacreada THEN
 					THIS.columnacreada=.F.
 				ENDIF
-				*oResult.Add(THIS.Parse(cObj))
+
+				LOCAL lNombreCursor
+				lNombreCursor= THIS.nombrecursor
+				SELECT &lNombreCursor.
+
+				* Si hay un registro no toco nada
+				IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor) > 0 THEN
+					APPEND BLANK
+					THIS.agregoregistro=.F.
+				ENDIF
 				* ESto es para cada objeto, 
 				THIS.Parse(cObj)
+				THIS.agregoregistro=.T.
 				* La primera vez que pasa por aqui ya creo todas las columnas
 				THIS.columnacreada=.T.
 				* Continuamos con el resto de los objectos
@@ -184,35 +189,35 @@ DEFINE CLASS Conversor AS CUSTOM
 	          
 					CASE INLIST(cValue,"true","false")  && Boolean value
 						uValue = (cValue == "true")
-	             
+
 					CASE UPPER(cValue) == "NULL" OR UPPER(cValue) == ".NULL." && Null value  &&  cesar
 						uValue = NULL
 	                
 					CASE LEFT(cValue,1) = [{]   && Object
-						* Agregoa a menos que este adentrode otro objeto??
-						lNombreCursor= THIS.nombrecursor
-						SELECT &lNombreCursor.
-						* Si ha hay un registro no toco nada
-						IF RECCOUNT(THIS.nombrecursor) =0 THEN
-							APPEND BLANK
-						ENDIF
-						THIS.nombreprefijo=""
+						* Agrego a menos que este adentro de otro objeto??
+						THIS.agregoregistro=.T.
+						THIS.esunobjeto=.T.
+						THIS.nombreprefijo=cProp
 						uValue = THIS.Parse(cValue)
 						THIS.nombreprefijo=""
+						THIS.agregoregistro=.F.
 						LOOP
-						*THIS.esunobjeto=.T.
-	               
+
 					CASE LEFT(cValue,1) = "["   && Array
 						THIS.estoyenarray=.T.
 						THIS.columnacreada=.F.
-						THIS.nombreprefijo=""
-						uValue = THIS.Parse(cValue)
+						THIS.nombreprefijo=cProp
+						LOCAL lNombreCursor
+						lNombreCursor= THIS.nombrecursor
+						SELECT &lNombreCursor.
+						GO TOP
+						* Si hay un registro no toco nada
+						uValue = THIS.parse(cValue)
 						THIS.columnacreada=.F.
 						THIS.nombreprefijo=""
 						* No tengo que hacer mas nada luego abajo de salir del array
 						LOOP
-						
-						
+
 					OTHERWISE                   && Numeric value
 						uValue = VAL(STRTRAN(cValue, ".", SET("POINT")))  && JuanPa, Abril 13 2012
 						lTipoDato = "N(12)"
@@ -222,35 +227,36 @@ DEFINE CLASS Conversor AS CUSTOM
 				IF !THIS.estoyenarray THEN
 					LOCAL lSentencia
 					SELECT cDatos
-					lNombreColumna=THIS.obtenerNombreUnicoColumna(THIS.nombreprefijo + cProp)
+					lNombreColumna=THIS.obtenerNombreUnicoColumna(cProp)
 					lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
 					&lSentencia
 					
-					IF RECCOUNT(THIS.nombrecursor)=0 THEN
+					IF THIS.agregoregistro OR RECCOUNT(THIS.nombrecursor)=0 THEN
+					*IF THIS.agregoregistro THEN
 						APPEND BLANK
-						*BROWSE
+						THIS.agregoregistro=.F.
 					ENDIF
 					
 					LOCAL lSentencia
 					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " ALL "
 					&lSentencia
-					*BROWSE
 				ELSE
+					
+					* Esto es para cada atributo de que tenga valor "simple" de una cadena json
+					LOCAL lSentencia,lNombreCursor
+					lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
+
+					lNombreCursor = THIS.nombrecursor
+					SELECT &lNombreCursor.
 					IF !THIS.columnacreada THEN
-						LOCAL lSentencia,lNombreCursor
-						lNombreCursor = THIS.nombrecursor
-						SELECT &lNombreCursor.
-						lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
-						*THIS.nombreColumna = lNombreColumna
 						lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
 						&lSentencia
 					ENDIF
-					
-					APPEND BLANK
 
-					*lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
-					*&lSentencia
-					
+					* Reemplazo en base al nombre que deberia tener!!!!
+					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
+					&lSentencia
+
 				ENDIF
 
 			ENDFOR
@@ -347,10 +353,14 @@ DEFINE CLASS Conversor AS CUSTOM
 				
 				IF LOWER( lCampoABuscar ) = LOWER(aCampos[indice,1]) THEN
 					lRepeticiones = lRepeticiones + 1
-				ENDIF	
+				ENDIF
 			ENDFOR
+			* Si estoy en un array no le sumo 1
 			IF lRepeticiones > 0 THEN
-				RETURN lNombreColumna + ALLTRIM(STR(lRepeticiones))
+				IF THIS.columnacreada THEN
+					lRepeticiones = lRepeticiones - 1
+				ENDIF
+				RETURN lNombreColumna + IIF(lRepeticiones= 0,"",ALLTRIM(STR(lRepeticiones)))
 			ELSE
 				RETURN lNombreColumna
 			ENDIF
