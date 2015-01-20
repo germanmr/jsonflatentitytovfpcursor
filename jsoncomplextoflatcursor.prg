@@ -53,6 +53,52 @@ pcjson= '{"respuestaComunicacion":{"idTransaccion":316,"respuestaBase":{"tiposRe
 =oConversor.jsonToCursor(pcJSON)
 BROWSE
 
+pcjson= '{"efector":{"codigoProfesion":1,"matricula":9999,"libro":"     ","folio":"     "},'+;
+		'"prescriptor":{"codigoProfesion":1,"matricula":9999,"libro":"     ","folio":"     "},'+;
+		'"fechaPrestacion":"18/03/2014",'+;
+		'"codigoAfiliado":"65987654",'+;
+		'"codigoConvenio":1,'+;
+		'"codigoDelegacion":1,'+;
+		'"codigoMedioDePago":0,'+;
+		'"diagnostico":"",'+;
+		'"prestacionSolicitadas":[{"codigoPrestacion":"420101","cantidad":1,"urgencia":false,"motivoSolicitud":"AGUDO","observaciones":"","bono":"321"}]} '
+
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
+
+*!*	pcjson='{"respuestaComunicacion": {"idTransaccion": 16144,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""}},'+;
+*!*		'"autorizadas": [{"baseAmbulatorio": {"ID": "A02-K37-I47","afiliado": {"ID": "000000014474134","nombre": "PEREYRA ANDRES","convenio": {'+;
+*!*		'"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": "     ",'+;
+*!*		'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": "     ","folio": "     "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"'+;
+*!*		'},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": "     ","folio": "     "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"'+;
+*!*		'},"fechaPrestacion": "2014/02/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601","ID": "420601",'+;
+*!*		'"Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},"coseguro": 1.00,"coseguroIva": 0.00,'+;
+*!*		'"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"}}],"fechaAutorizacion": "2014/02/01"},'+;
+*!*		'{"baseAmbulatorio": {"ID": "A02-K37-I48","afiliado": {"ID": "000000013033000","nombre": "ZABCIC CARLOS A","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {'+;
+*!*		'"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": "     ","folio": "     "},"efector": {"ID": {"codigoProfesion": 1,'+;
+*!*		'"matricula": 1,"libro": "     ","folio": "     "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,'+;
+*!*		'"libro": "     ","folio": "     "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"fechaPrestacion": "2014/02/01"},'+;
+*!*		'"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601","ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"'+;
+*!*		'},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+*!*	    '"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"}}],'+;
+*!*	    '"fechaAutorizacion": "2014/02/01"}]}'
+
+* Dos niveles de anidamiento
+*!*	pcjson='{"cantidad": 1,'+;
+*!*			'"paises": ['+;
+*!*			'{"codigopais": 1,"provincias": [{"codigoprovincia": "A" },{"codigoprovincia": "B" }]},'+;
+*!*			'{"codigopais": 2,"provincias": [{"codigoprovincia": "C" },{"codigoprovincia": "D"}]} '+;
+*!*					']'+;
+*!*			'}'
+*!*			
+*!*	lPosicion = ATC('[{',pcjson,1)
+*!*	lPosicion = ATC('}]',pcjson,1)
+*!*	SET STEP ON
+
+*!*	    
+*!*	=oConversor.jsonToCursor(pcJSON)
+*!*	BROWSE
+
 * Tengo que crear un cursor/tabla para cada caso de prueba!!
 *lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
 
@@ -66,6 +112,8 @@ DEFINE CLASS Conversor AS CUSTOM
 	nombrecursor="cDatos"
 	nombreprefijo=""
 	agregoregistro=.F.
+	nivelanidamiento=0
+	cantidadobjetos=0
 	
 	
 	PROCEDURE inicializaratributos()
@@ -75,6 +123,8 @@ DEFINE CLASS Conversor AS CUSTOM
 			THIS.nombrecursor="cDatos"
 			THIS.nombreprefijo=""
 			THIS.agregoregistro=.F.
+			THIS.nivelanidamiento=0
+			THIS.cantidadobjetos=0
 	ENDPROC
 	
 	PROCEDURE jsonToCursor(pcJSON)
@@ -140,21 +190,23 @@ DEFINE CLASS Conversor AS CUSTOM
 				IF THIS.estoyenarray AND !THIS.columnacreada THEN
 					THIS.columnacreada=.F.
 				ENDIF
+				THIS.cantidadobjetos = THIS.cantidadobjetos + 1
 
 				LOCAL lNombreCursor
 				lNombreCursor= THIS.nombrecursor
 				SELECT &lNombreCursor.
 
 				* Si hay un registro no toco nada, si no hay registros tengo que agregar
-				IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor) > 0 THEN
-					APPEND BLANK
-					THIS.agregoregistro=.F.
-				ELSE
-					IF RECCOUNT(THIS.nombrecursor) = 0 THEN
-						APPEND BLANK
-						THIS.agregoregistro=.F.
-					ENDIF
-				ENDIF
+				* THIS.agregoregistro
+*!*					IF RECCOUNT(THIS.nombrecursor) > 0 AND THIS.nivelanidamiento > 1 THEN
+*!*						*APPEND BLANK
+*!*						THIS.agregoregistro=.T.
+*!*					ELSE
+*!*						IF RECCOUNT(THIS.nombrecursor) = 0 THEN
+*!*							*APPEND BLANK
+*!*							THIS.agregoregistro=.F.
+*!*						ENDIF
+*!*					ENDIF
 				* ESto es para cada objeto, 
 				THIS.Parse(cObj)
 				THIS.agregoregistro=.T.
@@ -191,28 +243,33 @@ DEFINE CLASS Conversor AS CUSTOM
 	       
 				DO CASE
 					CASE LEFT(cValue,1) $ ['"]    && String value
-						uValue = THIS._decodeString( LEFT(SUBSTR(cValue,2),LEN(cValue) - 2) )
+						uValue = "'" + THIS._decodeString( LEFT(SUBSTR(cValue,2),LEN(cValue) - 2) ) + "'"
 						lTipoDato="C(100)"
 	               
 					CASE LEFT(cValue,1) = [@]   && Date/DateTime
 						cValue = SUBSTR(cValue,2)
 						IF LEN(cValue) = 8
 							uValue = CTOD(TRANSFORM(cValue,"@R ^9999-99-99"))
+							lTipoDato="date"
 						ELSE
 							uValue = CTOT(TRANSFORM(cValue,"@R ^9999-99-99 99:99:99"))
+							lTipoDato="datetime"
 						ENDIF
-	          
+
 					CASE INLIST(cValue,"true","false")  && Boolean value
-						uValue = (cValue == "true")
+						uValue = IIF(cValue == "true" , ".T.", ".F.")
+						lTipoDato="logical"
 
 					CASE UPPER(cValue) == "NULL" OR UPPER(cValue) == ".NULL." && Null value  &&  cesar
-						uValue = NULL
-	                
+						uValue = ""
+						lTipoDato="c(100)"
+						
 					CASE LEFT(cValue,1) = [{]   && Object
 						* Agrego a menos que este adentro de otro objeto??
 						THIS.agregoregistro=.T.
 						THIS.esunobjeto=.T.
 						THIS.nombreprefijo=cProp
+						*THIS.cantidadobjetos = 0
 						uValue = THIS.Parse(cValue)
 						THIS.nombreprefijo=""
 						THIS.agregoregistro=.F.
@@ -221,20 +278,34 @@ DEFINE CLASS Conversor AS CUSTOM
 					CASE LEFT(cValue,1) = "["   && Array
 						THIS.estoyenarray=.T.
 						THIS.columnacreada=.F.
-						THIS.nombreprefijo=cProp
+						
+						*IF !ISBLANK(cProp) THEN
+							*THIS.nombreprefijo=cProp
+						*ENDIF
+						
+						THIS.nivelanidamiento= THIS.nivelanidamiento + 1
+						
 						LOCAL lNombreCursor
 						lNombreCursor= THIS.nombrecursor
 						SELECT &lNombreCursor.
-						GO TOP
+						* Tengo que contar los niveles de anidamiento, para hacer los "JOINS"???
+						* 0 registros, me quedo ahi, tengo 1 me voy arriba
+						* Tengo dos
+						*IF RECCOUNT(THIS.nombrecursor) <> 1 THEN
+							GO TOP
+						*ENDIF
 						* Si hay un registro no toco nada
 						uValue = THIS.parse(cValue)
+						THIS.nivelanidamiento = THIS.nivelanidamiento - 1
 						THIS.columnacreada=.F.
 						THIS.nombreprefijo=""
 						* No tengo que hacer mas nada luego abajo de salir del array
 						LOOP
 
 					OTHERWISE                   && Numeric value
-						uValue = VAL(STRTRAN(cValue, ".", SET("POINT")))  && JuanPa, Abril 13 2012
+						*uValue = VAL(STRTRAN(cValue, ".", SET("POINT")))  && JuanPa, Abril 13 2012
+						* Fijarme como decodifico los decimales
+						uValue = cValue
 						lTipoDato = "N(12)"
 
 				ENDCASE
@@ -252,8 +323,19 @@ DEFINE CLASS Conversor AS CUSTOM
 						&lSentencia
 					ENDIF
 
+					
+					IF RECCOUNT(THIS.nombrecursor) > 0 AND THIS.nivelanidamiento <> THIS.nivelanterior THEN
+						APPEND BLANK
+						THIS.agregoregistro=.T.
+					ELSE
+						IF RECCOUNT(THIS.nombrecursor) = 0 THEN
+							APPEND BLANK
+							THIS.agregoregistro=.F.
+						ENDIF
+					ENDIF
+
 					* Reemplazo en base al nombre que deberia tener!!!!
-					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
+					lSentencia="REPLACE " + lNombreColumna + " WITH " + uValue
 					&lSentencia
 
 				ELSE && Cuando no estoy en un array
@@ -269,7 +351,7 @@ DEFINE CLASS Conversor AS CUSTOM
 					ENDIF
 					
 					LOCAL lSentencia
-					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " ALL "
+					lSentencia="REPLACE " + lNombreColumna + " WITH " + uValue + " ALL "
 					&lSentencia
 
 				ENDIF
@@ -277,8 +359,6 @@ DEFINE CLASS Conversor AS CUSTOM
 			ENDFOR
 	      
 		ENDFOR
-		
-		*RETURN oResult
 
 	ENDPROC
 
@@ -349,6 +429,9 @@ DEFINE CLASS Conversor AS CUSTOM
 			LOCAL ARRAY aCampos[1]
 			LOCAL lNombreCursor, lNombreColumna, lCantidadCampos, lRepeticiones, indice
 			
+			IF VARTYPE (THIS.nombreprefijo)="L" THEN
+				THIS.nombreprefijo = ""
+			ENDIF
 			lNombreColumna = ALLTRIM(THIS.nombreprefijo) + ALLTRIM(pNombreColumna)
 			
 			IF LOWER(lNombreColumna) = 'id'
