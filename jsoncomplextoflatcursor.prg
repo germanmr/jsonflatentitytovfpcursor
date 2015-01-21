@@ -91,8 +91,21 @@ lJsonAutorizada='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "00
 
 * Puedo hacer un bucle hasta el proxima '},{ "baseAmbulatorio":' y luego un append
 
-=oConversor.jsonToCursor(lJsonAutorizada)
+*!*	
+
+DIMENSION aTiposDatos[2]
+aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
+
+=oConversor.jsonToCursor(lJsonAutorizada, @aTiposDatos)
 BROWSE
+
+lCantidadCampos = AFIELDS(aCampos,ALIAS())
+
+FOR i=1 TO lCantidadCampos
+	*MESSAGEBOX(LOWER(aCampos[i,1]))
+ENDFOR
+MODIFY STRUCTURE
 
 * Tengo que crear un cursor/tabla para cada caso de prueba!!
 *lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
@@ -107,7 +120,7 @@ DEFINE CLASS Conversor AS CUSTOM
 	nombrecursor="cDatos"
 	nombreprefijo=""
 	agregoregistro=.F.
-	
+	DIMENSION acampos[1]
 	
 	PROCEDURE inicializaratributos()
 			THIS.estoyenarray=.F.
@@ -118,11 +131,29 @@ DEFINE CLASS Conversor AS CUSTOM
 			THIS.agregoregistro=.F.
 	ENDPROC
 	
-	PROCEDURE jsonToCursor(pcJSON)
+	PROCEDURE jsonToCursor(pcJSON, aTiposDatos)
 		
 		THIS.inicializaratributos()
-		*Preparo la zona de datos
+		
+		IF VARTYPE(aTiposDatos) <>"U"
+			LOCAL lCantidad
+			lCantidad = ALEN(aTiposDatos)
+			DIMENSION THIS.aCampos(lCantidad)
+			
+			LOCAL lCampo, i
+			i=1
+			FOR EACH lCampo IN aTiposDatos
+				THIS.aCampos[i]=aTiposDatos[i]
+				i = i + 1
+			ENDFOR
+		ENDIF	
+		
+		
+		* Seteos basicos e importantes!!!!!
 		SET SAFETY OFF
+		SET EXACT ON	
+		
+		*Preparo la zona de datos
 		CLOSE DATABASES
 		CREATE DATABASE pruebas
 		IF USED(THIS.nombrecursor) THEN
@@ -234,7 +265,6 @@ DEFINE CLASS Conversor AS CUSTOM
 					CASE LEFT(cValue,1) $ ['"]    && String value
 						uValue = THIS._decodeString( LEFT(SUBSTR(cValue,2),LEN(cValue) - 2) )
 						lTipoDato="C(100)"
-						
 	               
 					CASE LEFT(cValue,1) = [@]   && Date/DateTime
 						cValue = SUBSTR(cValue,2)
@@ -265,7 +295,7 @@ DEFINE CLASS Conversor AS CUSTOM
 					CASE LEFT(cValue,1) = "["   && Array
 						THIS.estoyenarray=.T.
 						THIS.columnacreada=.F.
-						THIS.nombreprefijo=cProp
+						THIS.nombreprefijo= THIS.nombreprefijo + cProp
 						LOCAL lNombreCursor
 						lNombreCursor= THIS.nombrecursor
 						SELECT &lNombreCursor.
@@ -279,44 +309,65 @@ DEFINE CLASS Conversor AS CUSTOM
 
 					OTHERWISE                   && Numeric value
 						uValue = VAL(STRTRAN(cValue, ".", SET("POINT")))  && JuanPa, Abril 13 2012
-						lTipoDato = "N(12)"
+						* TODO - decode numeber
+						lTipoDato = "N(10)"
 
 				ENDCASE
 
+									
+				* si estoy recorriendo un array
 				IF THIS.estoyenarray THEN
 					
 					* Esto es para cada atributo de que tenga valor "simple" de una cadena json
-					LOCAL lSentencia,lNombreCursor
+					LOCAL lSentencia, lNombreCursor, lTipoDatoForzado, lNombreColumna
 					lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
+					
+					lTipoDatoForzado= THIS.obtenerTipoDato(lNombrecolumna)
 
-					lNombreCursor = THIS.nombrecursor
-					SELECT &lNombreCursor.
+					IF !ISBLANK( lTipoDatoForzado ) THEN
+						lTipoDato = lTipoDatoForzado
+					ENDIF
+
 					IF !THIS.columnacreada THEN
 						lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
 						&lSentencia
 					ENDIF
 
 					* Reemplazo en base al nombre que deberia tener!!!!
+					lNombreCursor = THIS.nombrecursor
+					SELECT &lNombreCursor.
+					
 					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
 					&lSentencia
 
 				ELSE && Cuando no estoy en un array
-					LOCAL lSentencia
-					SELECT cDatos
+					LOCAL lSentencia, lNombreCursor, lTipoDatoForzado, lNombreColumna
+					
 					lNombreColumna=THIS.obtenerNombreUnicoColumna(cProp)
+					
+					lTipoDatoForzado= THIS.obtenerTipoDato(lNombrecolumna)
+
+					IF !ISBLANK( lTipoDatoForzado ) THEN
+						lTipoDato = lTipoDatoForzado
+					ENDIF
+					
 					lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
 					&lSentencia
 					
+					lNombreCursor = THIS.nombrecursor
+					SELECT &lNombreCursor.
+
 					IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor)=0 THEN
 						APPEND BLANK
 						THIS.agregoregistro=.F.
 					ENDIF
-					
+
 					LOCAL lSentencia
 					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " ALL "
 					&lSentencia
 
 				ENDIF
+
 
 			ENDFOR
 	      
@@ -391,29 +442,27 @@ DEFINE CLASS Conversor AS CUSTOM
 			LPARAMETERS pNombreColumna
 			
 			LOCAL ARRAY aCampos[1]
-			LOCAL lNombreCursor, lNombreColumna, lCantidadCampos, lRepeticiones, indice
+			LOCAL lNombreColumna, lNombreCursor, lCantidadCampos, lRepeticiones, lIndice, lCampoEncontrado
 			
 			lNombreColumna = ALLTRIM(THIS.nombreprefijo) + ALLTRIM(pNombreColumna)
-			
-			IF LOWER(lNombreColumna) = 'id'
-				*SET STEP ON
-			ENDIF			
 			
 			lNombreCursor = THIS.nombrecursor
 			SELECT &lNombreCursor.
 
 			lCantidadCampos=AFIELDS(aCampos,THIS.nombrecursor)
 			lRepeticiones = 0
-			FOR indice=1 TO lCantidadCampos
+
+			FOR lIndice=1 TO lCantidadCampos
 				* Tengo que buscar el nombre del campo con las repeticiones que tenga
 				* Si ya se repitio supongo asumo que fue creado con el numero de repeticion en el nombre
 				LOCAL lCampoABuscar
-				lCampoABuscar =  lNombreColumna + IIF(lRepeticiones>0, ALLTRIM(STR(lRepeticiones)),"")
-				
-				IF LOWER( lCampoABuscar ) = LOWER(aCampos[indice,1]) THEN
+				lCampoABuscar =  LOWER(ALLTRIM(lNombreColumna) + IIF(lRepeticiones>0, ALLTRIM(STR(lRepeticiones)),""))
+
+				IF lCampoABuscar = LOWER(aCampos[lIndice,1])  THEN
 					lRepeticiones = lRepeticiones + 1
 				ENDIF
 			ENDFOR
+
 			* Si estoy en un array no le sumo 1
 			IF lRepeticiones > 0 THEN
 				IF THIS.columnacreada THEN
@@ -425,108 +474,41 @@ DEFINE CLASS Conversor AS CUSTOM
 			ENDIF
 
 	ENDPROC
+	
+	PROCEDURE obtenerTipoDato(pNombreCampo)
+		
+		LOCAL campo
+		
+		FOR EACH campo IN THIS.aCampos
+		
+			IF LOWER(ALLTRIM(campo.nombreColumna)) = LOWER(ALLTRIM(pNombreCampo)) THEN
+				RETURN campo.tipodato
+			ENDIF
+		
+		ENDFOR
+		
+		* Si no encontramos nada lo creamos con el valor por defecto
+		RETURN ""
+	
+	ENDPROC
 
 
 ENDDEFINE
 
-* JSONArray
-* Takes an array an convert it to a JSONArray
-PROCEDURE JSONArray(paArray)
-	IF PCOUNT() = 1
-		RETURN CREATEOBJECT("JSONArray",@paArray)
-	ELSE
-		RETURN CREATEOBJECT("JSONArray")
-	ENDIF
-ENDPROC
 
-DEFINE CLASS JSONArray AS Collection
- *	
-	Lines = 0
-	Columns = 0
- 
-PROCEDURE Init(paArray)
-	DO CASE 
-     CASE PCOUNT() = 0
-          THIS.Lines = 0
-          THIS.Columns = 1
-     
-     CASE TYPE("ALEN(paArray)")="N"  && TYPE("paArray",1) = "A"
-          LOCAL uItem
-          THIS.Lines = ALEN(paArray,1)
-          THIS.Columns = ALEN(paArray,2)
-		  FOR EACH uItem IN paArray
-		   THIS.Add(uItem)
-		  ENDFOR
-		  
-	 CASE THIS._isArray(paArray)
-	      LOCAL oItems, uItem
-	      oItems = JSON.decodeArray(paArray)
-	      THIS.Lines = oItems.Count
-	      THIS.Columns = 1
-	      FOR EACH uItem IN oItems
-	       THIS.Add(uItem)
-	      ENDFOR
-	      
-	 CASE THIS._isCollection(paArray)
-	      LOCAL uItem
-	      THIS.Lines = paArray.Count
-	      THIS.Columns = 1
-	      FOR EACH uItem IN paArray
-	       THIS.Add(uItem)
-	      ENDFOR
-  ENDCASE
- ENDPROC
- 
-	PROCEDURE ToJSON()
-		LOCAL ARRAY aContent[1]
-		THIS.ToArray(@aContent)
-		RETURN JSON.encodeArray(@aContent)
+DEFINE CLASS TipoDato AS CUSTOM
+	
+	* Es el nombre dela columna del cursor
+	nombreColumna=""
+	* Es una cadena representando el tipo de dato, ej: N(12,2)
+	tipoDato=""
+	
+	PROCEDURE INIT(pNombreColumna, pTipoDato)
+		THIS.nombreColumna=pNombreColumna
+		THIS.tipoDato=pTipoDato
 	ENDPROC
- 
-	PROCEDURE ToArray(paArray)
-			LOCAL nRows,nCols
-			nRows = IIF(THIS.Lines > 0, THIS.Lines, THIS.Count)
-			nCols = IIF(THIS.Columns > 0, THIS.Columns, 1)
-			DIMENSION paArray[nRows,nCols]
-			LOCAL uItem, i
-			FOR i = 1 TO THIS.COunt
-				paArray[i] = THIS.Item[i]
-			ENDFOR
-			
-			RETURN THIS.Count
-	ENDPROC
-
-	HIDDEN PROCEDURE _isArray(puValue)
-		RETURN (VARTYPE(puValue)="C" AND LEFT(puValue,1) = "[" AND RIGHT(puValue,1)="]")
-	ENDPROC
-	 
-	HIDDEN PROCEDURE _isCollection(puValue)
-		RETURN (VARTYPE(puValue) = "O" AND PEMSTATUS(puValue,"BaseClass",5) AND LOWER(puValue.baseClass == "collection"))
-	ENDPROC
- 
- *
+	
 ENDDEFINE
-
-
-DEFINE CLASS JSONEmpty AS Custom
-	_customPropList = ""
-
-	PROCEDURE addProperty(pcProp, puValue)
-		DODEFAULT(pcProp, puValue)
-		THIS._customPropList = THIS._customPropList + "[" + LOWER(pcProp) + "]"
-	ENDPROC
-
-	PROCEDURE _isProp(pcProp)
-		RETURN (AT("[" + LOWER(pcProp) + "]", THIS._customPropList) <> 0)
-	ENDPROC
-
-	PROCEDURE _setPropValue(pcProp, puValue)
-		IF THIS._isProp(pcProp)
-			STORE puValue TO ("THIS." + pcProp)
-		ENDIF
-	ENDPROC
-ENDDEFINE
-
 
 
 PROCEDURE equalscursor(pCursorObtenido,pCursorEsperado)
