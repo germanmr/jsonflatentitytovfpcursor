@@ -8,3 +8,5 @@
 /jsoncomplextoflatcursor.BAK
 /cDatos.DBF
 *.BAK
+/jsontoobjectarray.FXP
+*.ERR
