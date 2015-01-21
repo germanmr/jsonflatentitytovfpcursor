@@ -286,7 +286,8 @@ DEFINE CLASS Conversor AS CUSTOM
 						* Agrego a menos que este adentro de otro objeto??
 						THIS.agregoregistro=.T.
 						THIS.esunobjeto=.T.
-						THIS.nombreprefijo=cProp
+						* le puedo agregar al pregfijo los ultimos dos niveles de anidamiento de objetos???
+						THIS.nombreprefijo= cProp
 						uValue = THIS.Parse(cValue)
 						THIS.nombreprefijo=""
 						THIS.agregoregistro=.F.
@@ -295,7 +296,7 @@ DEFINE CLASS Conversor AS CUSTOM
 					CASE LEFT(cValue,1) = "["   && Array
 						THIS.estoyenarray=.T.
 						THIS.columnacreada=.F.
-						THIS.nombreprefijo= THIS.nombreprefijo + cProp
+						THIS.nombreprefijo= cProp
 						LOCAL lNombreCursor
 						lNombreCursor= THIS.nombrecursor
 						SELECT &lNombreCursor.
@@ -314,59 +315,45 @@ DEFINE CLASS Conversor AS CUSTOM
 
 				ENDCASE
 
-									
+				LOCAL lSentencia, lNombreCursor, lTipoDatoForzado, lNombreColumna, lSufijo
+				lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
+				
+				lTipoDatoForzado= THIS.obtenerTipoDato(lNombrecolumna)
+
+				IF !ISBLANK( lTipoDatoForzado ) THEN
+					lTipoDato = lTipoDatoForzado
+				ENDIF
+				
+				* Reemplazo en base al nombre que deberia tener!!!!
+				lNombreCursor = THIS.nombrecursor
+				SELECT &lNombreCursor.
+
 				* si estoy recorriendo un array
 				IF THIS.estoyenarray THEN
+				
+					lSufijo = ""
 					
-					* Esto es para cada atributo de que tenga valor "simple" de una cadena json
-					LOCAL lSentencia, lNombreCursor, lTipoDatoForzado, lNombreColumna
-					lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
-					
-					lTipoDatoForzado= THIS.obtenerTipoDato(lNombrecolumna)
-
-					IF !ISBLANK( lTipoDatoForzado ) THEN
-						lTipoDato = lTipoDatoForzado
-					ENDIF
-
 					IF !THIS.columnacreada THEN
 						lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
 						&lSentencia
 					ENDIF
 
-					* Reemplazo en base al nombre que deberia tener!!!!
-					lNombreCursor = THIS.nombrecursor
-					SELECT &lNombreCursor.
-					
-					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
-					&lSentencia
-
 				ELSE && Cuando no estoy en un array
-					LOCAL lSentencia, lNombreCursor, lTipoDatoForzado, lNombreColumna
 					
-					lNombreColumna=THIS.obtenerNombreUnicoColumna(cProp)
-					
-					lTipoDatoForzado= THIS.obtenerTipoDato(lNombrecolumna)
-
-					IF !ISBLANK( lTipoDatoForzado ) THEN
-						lTipoDato = lTipoDatoForzado
-					ENDIF
-					
+					lSufijo ="ALL"
+				
 					lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
 					&lSentencia
-					
-					lNombreCursor = THIS.nombrecursor
-					SELECT &lNombreCursor.
 
 					IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor)=0 THEN
 						APPEND BLANK
 						THIS.agregoregistro=.F.
 					ENDIF
-
-					LOCAL lSentencia
-					lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " ALL "
-					&lSentencia
-
+					
 				ENDIF
+				
+				lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " " + lSufijo
+				&lSentencia				
 
 
 			ENDFOR
