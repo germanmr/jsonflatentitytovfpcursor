@@ -79,33 +79,75 @@ oConversor=CREATEOBJECT("Conversor")
 *!*	=oConversor.jsonToCursor(lJSonRechazada)
 *!*	BROWSE
 
-lJsonAutorizada='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
-	'"convenio": {"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 52,"nombre": "2000/01 - Exento"}},"prestador": {"codigoProfesion": 4,'+;
-	'"matricula": 64758,"libro": "     ","folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ",'+;
-	'"folio": "     "},"nombre": "DR CHAPATIN"},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ","folio": "     "'+;
-	'},"nombre": "DR CHAPATIN"},"fechaPrestacion": "2014/08/21"}'+;
-	',"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420101","ID": "420101",'+;
-	'"Nombre": "CONSULTA EN CONSULTORIO."},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0,'+;
-	'"coseguroIva": 0,"coseguroPorcentaje": 0,"honorarios": 0,"derechos": 0,"iva": 0,"coseguroTexto": "Sin Cargo"}}],"fechaAutorizacion": "2014/08/21"}'
+*!*	lJsonAutorizada='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
+*!*		'"convenio": {"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 52,"nombre": "2000/01 - Exento"}},"prestador": {"codigoProfesion": 4,'+;
+*!*		'"matricula": 64758,"libro": "     ","folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ",'+;
+*!*		'"folio": "     "},"nombre": "DR CHAPATIN"},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ","folio": "     "'+;
+*!*		'},"nombre": "DR CHAPATIN"},"fechaPrestacion": "2014/08/21"}'+;
+*!*		',"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420101","ID": "420101",'+;
+*!*		'"Nombre": "CONSULTA EN CONSULTORIO."},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0,'+;
+*!*		'"coseguroIva": 0,"coseguroPorcentaje": 0,"honorarios": 0,"derechos": 0,"iva": 0,"coseguroTexto": "Sin Cargo"}}],"fechaAutorizacion": "2014/08/21"}'
 
 
-* Puedo hacer un bucle hasta el proxima '},{ "baseAmbulatorio":' y luego un append
+*!*	* Puedo hacer un bucle hasta el proxima '},{ "baseAmbulatorio":' y luego un append
 
-*!*	
+*!*	*!*	
 
-DIMENSION aTiposDatos[2]
-aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
-aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
+*!*	DIMENSION aTiposDatos[2]
+*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+*!*	aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
 
-=oConversor.jsonToCursor(lJsonAutorizada, @aTiposDatos)
-BROWSE
+*!*	=oConversor.jsonToCursor(lJsonAutorizada, @aTiposDatos)
+*!*	BROWSE
 
-lCantidadCampos = AFIELDS(aCampos,ALIAS())
+*!*	lCantidadCampos = AFIELDS(aCampos,ALIAS())
 
-FOR i=1 TO lCantidadCampos
-	*MESSAGEBOX(LOWER(aCampos[i,1]))
-ENDFOR
-MODIFY STRUCTURE
+*!*	FOR i=1 TO lCantidadCampos
+*!*		*MESSAGEBOX(LOWER(aCampos[i,1]))
+*!*	ENDFOR
+*!*	MODIFY STRUCTURE
+
+
+* Dos niveles de anidamiento
+*!*	pcjson='{"respuestaAutorizarLista": {'+;
+*!*				' respuestaBase: { '+;
+*!*	        	' "tiposRespuestaValidacion": "OK", '+;
+*!*	        	' "mensaje": ""
+*!*				'},'+;
+*!*	'"auditorias": [], '+;
+*!*	'"rechazadas": [], '+;
+*!*	'"autorizadaDTO": { "ID": "A02-L31-K62" } '+;
+*!*	'}'
+
+
+* Indico el nodo de donde cortar, un solo nivel
+
+*!*	pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
+*!*	'}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
+*!*	'"nombre": "GONZALEZ ROXANA L","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": { "ID": 1,"nombre": "Dpto ROSARIO"'+;
+*!*	'}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,'+;
+*!*	'"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {'+;
+*!*	'"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+*!*	'}}],"fechaAutorizacion": "2014/07/01"},{"baseAmbulatorio": {"ID": "A02-R34-S19","afiliado": {"ID": "000000028148440","nombre": "PEDRIEL WALTER SEBAS",'+;
+*!*	'"convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,'+;
+*!*	'"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+*!*	'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+*!*	'}}],"fechaAutorizacion": "2014/07/01"}]}'
+
+*!*	lNombreNodo = "autorizadas"
+
+*!*	DIMENSION aTiposDatos[1]
+*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+
+*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo,@aTiposDatos)
+
+*!*	BROWSE
 
 * Tengo que crear un cursor/tabla para cada caso de prueba!!
 *lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
@@ -129,7 +171,48 @@ DEFINE CLASS Conversor AS CUSTOM
 			THIS.nombrecursor="cDatos"
 			THIS.nombreprefijo=""
 			THIS.agregoregistro=.F.
+			* Seteos basicos e importantes!!!!!
+			SET SAFETY OFF
+			SET EXACT ON
 	ENDPROC
+	
+	* De una cadena json me da una coleccion de objetos para luego ser parseados por nodo
+	* Este metodo es para mas un solo anidamiento de objetos
+	* Devuelvo un cursor del nodo especificado
+	* Tiene que estar en primer nivel y no contener arrays anidados
+	PROCEDURE jsonAColeccion(pcjson, pNombreNodo,aTiposDatos)
+		
+		THIS.inicializaratributos()
+
+		pcJSON = SUBSTR(pcJSON,2,LEN(pcJSON) - 2) 
+
+		LOCAL oNodos, i, cBloque, lAtributoBuscado, lNombrenodo
+		oNodos = THIS._Split(pcJSON)
+		
+		oNodo = .NULL.
+		
+		FOR i = 1 TO oNodos.Count
+			cBloque = oNodos.Item[i]
+			lAtributoBuscado = '"' + LOWER(pNombreNodo) + '"'
+			lNombrenodo = LEFT(LOWER(cBloque),LEN(LOWER(pNombreNodo)) + 2 )
+			IF lAtributoBuscado = lNombreNodo THEN
+				oNodo = cBloque
+				EXIT
+			ENDIF
+		ENDFOR
+		
+		IF !ISNULL(oNodo) THEN
+			CREATE CURSOR cNodo(valor memo)
+			INSERT INTO cNodo(valor)VALUES(oNodo)
+			BROWSE
+
+			THIS.jsonToCursor("{" + oNodo + "}", @aTiposDatos)
+		ELSE
+			* No existe el nodo en las condiciones indicadas
+			RETURN .NULL.
+		ENDIF
+		
+	ENDPROC	
 	
 	PROCEDURE jsonToCursor(pcJSON, aTiposDatos)
 		
@@ -148,10 +231,6 @@ DEFINE CLASS Conversor AS CUSTOM
 			ENDFOR
 		ENDIF	
 		
-		
-		* Seteos basicos e importantes!!!!!
-		SET SAFETY OFF
-		SET EXACT ON	
 		
 		*Preparo la zona de datos
 		CLOSE DATABASES
@@ -340,7 +419,7 @@ DEFINE CLASS Conversor AS CUSTOM
 
 				ELSE && Cuando no estoy en un array
 					
-					lSufijo ="ALL"
+					lSufijo =" ALL"
 				
 					lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
 					&lSentencia
@@ -352,7 +431,7 @@ DEFINE CLASS Conversor AS CUSTOM
 					
 				ENDIF
 				
-				lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue + " " + lSufijo
+				lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
 				&lSentencia				
 
 
