@@ -122,32 +122,32 @@ oConversor=CREATEOBJECT("Conversor")
 
 * Indico el nodo de donde cortar, un solo nivel
 
-pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
-'}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
-'"nombre": "GONZALEZ ROXANA L","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": { "ID": 1,"nombre": "Dpto ROSARIO"'+;
-'}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,'+;
-'"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {'+;
-'"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
-'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
-'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
-'}}],"fechaAutorizacion": "2014/07/01"},{"baseAmbulatorio": {"ID": "A02-R34-S19","afiliado": {"ID": "000000028148440","nombre": "PEDRIEL WALTER SEBAS",'+;
-'"convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,'+;
-'"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
-'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
-'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
-'}}],"fechaAutorizacion": "2014/07/01"}]}'
+*!*	pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
+*!*	'}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
+*!*	'"nombre": "GONZALEZ ROXANA L","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": { "ID": 1,"nombre": "Dpto ROSARIO"'+;
+*!*	'}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,'+;
+*!*	'"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {'+;
+*!*	'"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+*!*	'}}],"fechaAutorizacion": "2014/07/01"},{"baseAmbulatorio": {"ID": "A02-R34-S19","afiliado": {"ID": "000000028148440","nombre": "PEDRIEL WALTER SEBAS",'+;
+*!*	'"convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,'+;
+*!*	'"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+*!*	'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+*!*	'}}],"fechaAutorizacion": "2014/07/01"}]}'
 
-lNombreNodo = "autorizadas"
+*!*	lNombreNodo = "autorizadas"
 
-DIMENSION aTiposDatos[1]
-aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+*!*	DIMENSION aTiposDatos[1]
+*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 
-=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos)
+*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos)
 
-BROWSE
+*!*	BROWSE
 
 *!*	* Tengo que crear un cursor/tabla para cada caso de prueba!!
 *!*	*lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
@@ -171,6 +171,27 @@ BROWSE
 *!*	lNombreNodo = "autorizada"
 *!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
 *!*	BROWSE
+
+
+pcJson= '{'+;
+'"efector":{"codigoProfesion":1,"matricula":987,"libro":"     ","folio":"     "},'+;
+'"prescriptor":{"codigoProfesion":1,"matricula":987,"libro":"     ","folio":"     "},'+;
+'"fechaPrestacion":"18/03/2014",'+;
+'"codigoAfiliado":"3215487",'+;
+'"codigoConvenio":1,'+;
+'"codigoDelegacion":1,'+;
+'"codigoMedioDePago":0,'+;
+'"diagnostico":"",'+;
+'"prestacionSolicitadas":'+;
+'[{"codigoPrestacion":"999999","cantidad":1,"urgencia":false,"motivoSolicitud":"AGUDO","observaciones":"","bono":"321"}]}'
+
+lNombreNodo = "prestacionSolicitadas"
+DIMENSION aTiposDatos[1]
+aTiposDatos[1]=CREATEOBJECT("TipoDato","codigoAfiliado","C(15)")
+
+=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+BROWSE
+
 
 DEFINE CLASS Conversor AS CUSTOM
 
@@ -448,6 +469,7 @@ DEFINE CLASS Conversor AS CUSTOM
 				DO CASE
 					CASE LEFT(cValue,1) $ ['"]    && String value
 						uValue = THIS._decodeString( LEFT(SUBSTR(cValue,2),LEN(cValue) - 2) )
+						uValue = "'" + uValue + "'"
 						lTipoDato="C(100)"
 	               
 					CASE LEFT(cValue,1) = [@]   && Date/DateTime
@@ -460,11 +482,16 @@ DEFINE CLASS Conversor AS CUSTOM
 						lTipoDato="date"
 	          
 					CASE INLIST(cValue,"true","false")  && Boolean value
-						uValue = (cValue == "true")
+						*uValue = (cValue == "true")
+						IF cValue == "true" THEN
+							uValue = " .T. "
+						ELSE
+							uValue = " .F. "
+						ENDIF
 						lTipoDato="logical"
 
 					CASE UPPER(cValue) == "NULL" OR UPPER(cValue) == ".NULL." && Null value  &&  cesar
-						uValue = NULL
+						uValue = ".NULL."
 	                
 					CASE LEFT(cValue,1) = [{]   && Object
 						* Agrego a menos que este adentro de otro objeto??
@@ -493,8 +520,9 @@ DEFINE CLASS Conversor AS CUSTOM
 						LOOP
 
 					OTHERWISE                   && Numeric value
-						uValue = VAL(STRTRAN(cValue, ".", SET("POINT")))  && JuanPa, Abril 13 2012
-						* TODO - decode numeber
+						*uValue = VAL(STRTRAN(cValue, ".", SET("POINT")))  && JuanPa, Abril 13 2012
+						uValue = cValue
+						* TODO - decode numero
 						lTipoDato = "N(10)"
 
 				ENDCASE
@@ -536,7 +564,7 @@ DEFINE CLASS Conversor AS CUSTOM
 					
 				ENDIF
 				
-				lSentencia="REPLACE " + lNombreColumna + " WITH " + cValue
+				lSentencia="REPLACE " + lNombreColumna + " WITH " + uValue
 				&lSentencia				
 
 
