@@ -122,35 +122,55 @@ oConversor=CREATEOBJECT("Conversor")
 
 * Indico el nodo de donde cortar, un solo nivel
 
-*!*	pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
-*!*	'}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
-*!*	'"nombre": "GONZALEZ ROXANA L","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": { "ID": 1,"nombre": "Dpto ROSARIO"'+;
-*!*	'}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,'+;
-*!*	'"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {'+;
-*!*	'"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
-*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
-*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
-*!*	'}}],"fechaAutorizacion": "2014/07/01"},{"baseAmbulatorio": {"ID": "A02-R34-S19","afiliado": {"ID": "000000028148440","nombre": "PEDRIEL WALTER SEBAS",'+;
-*!*	'"convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,'+;
-*!*	'"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-*!*	'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
-*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
-*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
-*!*	'}}],"fechaAutorizacion": "2014/07/01"}]}'
+pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
+'}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
+'"nombre": "GONZALEZ ROXANA L","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": { "ID": 1,"nombre": "Dpto ROSARIO"'+;
+'}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,'+;
+'"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {'+;
+'"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+'}}],"fechaAutorizacion": "2014/07/01"},{"baseAmbulatorio": {"ID": "A02-R34-S19","afiliado": {"ID": "000000028148440","nombre": "PEDRIEL WALTER SEBAS",'+;
+'"convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,'+;
+'"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+'}}],"fechaAutorizacion": "2014/07/01"}]}'
 
-*!*	lNombreNodo = "autorizadas"
+lNombreNodo = "autorizadas"
+
+DIMENSION aTiposDatos[1]
+aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+
+=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos)
+
+BROWSE
+
+*!*	* Tengo que crear un cursor/tabla para cada caso de prueba!!
+*!*	*lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
+
+
+*!*	* Con dos niveles de anidamiento, obtengo cursor de un nodo
+*!*	pcjson=	'{"respuestaGeneral":{"estado":"OK","mensaje":""},"detalle":{"respuestaDetalle":{"estado":"ERROR","mensaje":""},'+;
+*!*			'"auditorias":[],"rechazadas":[],"autorizada":{"codigoAutorizacion":"123456"}}}'
 
 *!*	DIMENSION aTiposDatos[1]
 *!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 
-*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo,@aTiposDatos)
-
+*!*	lNombreNodo = "respuestaGeneral"
+*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
 *!*	BROWSE
 
-* Tengo que crear un cursor/tabla para cada caso de prueba!!
-*lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
+*!*	lNombreNodo = "respuestaDetalle"
+*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+*!*	BROWSE
+
+*!*	lNombreNodo = "autorizada"
+*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+*!*	BROWSE
 
 DEFINE CLASS Conversor AS CUSTOM
 
@@ -162,6 +182,8 @@ DEFINE CLASS Conversor AS CUSTOM
 	nombrecursor="cDatos"
 	nombreprefijo=""
 	agregoregistro=.F.
+	nodoBuscado = ""
+	nodoEncontrado = .NULL.
 	DIMENSION acampos[1]
 	
 	PROCEDURE inicializaratributos()
@@ -171,6 +193,8 @@ DEFINE CLASS Conversor AS CUSTOM
 			THIS.nombrecursor="cDatos"
 			THIS.nombreprefijo=""
 			THIS.agregoregistro=.F.
+			THIS.nodoBuscado = ""
+			THIS.nodoEncontrado = .NULL.			
 			* Seteos basicos e importantes!!!!!
 			SET SAFETY OFF
 			SET EXACT ON
@@ -184,39 +208,120 @@ DEFINE CLASS Conversor AS CUSTOM
 		
 		THIS.inicializaratributos()
 
-		pcJSON = SUBSTR(pcJSON,2,LEN(pcJSON) - 2) 
-
-		LOCAL oNodos, i, cBloque, lAtributoBuscado, lNombrenodo
-		oNodos = THIS._Split(pcJSON)
 		
-		oNodo = .NULL.
+		THIS.nodoBuscado = pNombreNodo
+		THIS.obtenerNodo(pcJSON)
 		
-		FOR i = 1 TO oNodos.Count
-			cBloque = oNodos.Item[i]
-			lAtributoBuscado = '"' + LOWER(pNombreNodo) + '"'
-			lNombrenodo = LEFT(LOWER(cBloque),LEN(LOWER(pNombreNodo)) + 2 )
-			IF lAtributoBuscado = lNombreNodo THEN
-				oNodo = cBloque
-				EXIT
-			ENDIF
-		ENDFOR
-		
-		IF !ISNULL(oNodo) THEN
+		IF !ISNULL(THIS.nodoEncontrado) THEN
 			CREATE CURSOR cNodo(valor memo)
-			INSERT INTO cNodo(valor)VALUES(oNodo)
+			INSERT INTO cNodo(valor)VALUES(THIS.nodoEncontrado)
 			BROWSE
 
-			THIS.jsonToCursor("{" + oNodo + "}", @aTiposDatos)
+			THIS.jsonToCursor("{" + THIS.nodoEncontrado + "}", @aTiposDatos)
 		ELSE
 			* No existe el nodo en las condiciones indicadas
 			RETURN .NULL.
 		ENDIF
 		
+	ENDPROC
+
+	PROCEDURE obtenerNodo(pcJSON)
+		 *
+		LOCAL oObjects, i, oResult, lIsArray
+		STORE .F. TO lIsArray
+
+		IF LEFT(pcJSON,1) = "[" THEN
+			lISArray = .T.
+		ENDIF
+
+		pcJSON = SUBSTR(pcJSON,2,LEN(pcJSON) - 2) 
+		 
+		LOCAL oPairs, j, cPair, cProp, cValue, uValue, oObj, cObj, nSep
+
+		oObjects = THIS._Split(pcJSON)
+		 
+		FOR i = 1 TO oObjects.Count
+			*
+			cObj = oObjects.Item[i]
+			
+			LOCAL lSalgo
+			lSalgo = THIS.verificarNodoBuscado(cObj)
+			
+			IF lSalgo THEN
+				RETURN
+			ENDIF
+			
+			IF EMPTY(cObj)
+				LOOP
+			ENDIF
+		  
+			IF lIsArray AND THIS.IsObject(cObj)
+				THIS.obtenerNodo(cObj)
+				LOOP
+			ENDIF
+
+			oPairs = THIS._Split(cObj)
+			
+			FOR j = 1 TO oPairs.Count
+			
+				cPair = ALLTRIM(oPairs.Item[j])
+				
+				LOCAL lSalgo
+				lSalgo = THIS.verificarNodoBuscado(cPair)
+				
+				IF lSalgo THEN
+					RETURN
+				ENDIF
+				
+				IF lIsArray
+					cValue = cPair
+				ELSE
+					* Si no es un array puede ser que haya encontrado el nodo
+					nSep = AT(":",cPair)
+					cProp = CHRTRAN(LEFT(cPair, nSep - 1),["'],[])
+					cValue = ALLTRIM(SUBSTR(cPair, nSep + 1))
+				ENDIF
+		   
+				* VES Ene 24, 2014
+				* Si la propiedad empieza con $, se elimina pues es algo
+				* particular de JavaScript que no es compatible con VFP
+				IF !lIsArray AND LEFT(cPRop,1) = "$"
+					cProp = SUBSTR(cProp,2)
+				ENDIF
+				
+				IF LEFT(cValue,1) = [{] OR LEFT(cValue,1) = "[" THEN
+					THIS.obtenerNodo(cValue)
+				ENDIF
+
+			ENDFOR
+
+		ENDFOR
+		
+	ENDPROC
+
+	PROCEDURE verificarNodoBuscado(cBloque )
+		LOCAL lAtributoBuscado, lNombreNodo
+		LOCAL oNodo
+		oNodo = .NULL.
+
+		lAtributoBuscado = '"' + LOWER(THIS.nodoBuscado) + '"'
+		lNombrenodo = LEFT(LOWER(cBloque),LEN(LOWER(THIS.nodoBuscado)) + 2 )
+		
+		IF lAtributoBuscado = lNombreNodo THEN
+			THIS.nodoEncontrado = cBloque
+		ENDIF
+		
+		RETURN oNodo
+	
 	ENDPROC	
 	
 	PROCEDURE jsonToCursor(pcJSON, aTiposDatos)
 		
 		THIS.inicializaratributos()
+		
+		IF pcJSON = '[]' OR pcJSON = " " THEN
+			RETURN ""
+		ENDIF
 		
 		IF VARTYPE(aTiposDatos) <>"U"
 			LOCAL lCantidad
