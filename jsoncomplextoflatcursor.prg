@@ -234,6 +234,7 @@ DEFINE CLASS Conversor AS CUSTOM
 	DIMENSION acampos[1]
 	
 	PROCEDURE inicializaratributos()
+			MESSAGEBOX("Hacer el equals de cursor!!")
 			THIS.estoyenarray=.F.
 			THIS.columnacreada=.F.
 			THIS.esunobjeto=.F.
