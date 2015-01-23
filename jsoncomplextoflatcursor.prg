@@ -11,166 +11,166 @@ LOCAL oConversor
 oConversor=CREATEOBJECT("Conversor")
 
 * Bien!!!!!!!
-*!*	pcJSON='{"nombre":"German","apellido":"muñoz"}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcJSON='{"nombre":"German","apellido":"muñoz"}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	* Si aplano la entidad me queda como una fila
+* Si aplano la entidad me queda como una fila
 
-*!*	pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	pcjson = '{"employees":[{"firstName":"Primero", "lastName":"perez"},{"firstName":"segundo", "lastName":"Gonzalez"}]}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcjson = '{"employees":[{"firstName":"Primero", "lastName":"perez"},{"firstName":"segundo", "lastName":"Gonzalez"}]}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	pcjson='{tiposRespuestaValidacion: "OK",mensaje: "Hay comunicacion"}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcjson='{tiposRespuestaValidacion: "OK",mensaje: "Hay comunicacion"}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
-*!*			'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
+		'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	pcjson= '{"respuestaComunicacion":{"idTransaccion":316,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
-*!*			'"respuestaElegibilidadAfiliado":{"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""},"detalleElegibilidadAfiliado":{'+;
-*!*			'"afiliado":{"ID":"32165478","nombre":"PEREZ JUAN","convenio":{"ID":1,"nombre":"IAPOS"},"plan":{"ID":1,"nombre":"Dpto ROSARIO"}},'+;
-*!*			'"modoIngresoAfiliado":"M","observaciones":""}}}'
-*!*	=oConversor.jsonToCursor(pcJSON)
-*!*	BROWSE
+pcjson= '{"respuestaComunicacion":{"idTransaccion":316,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
+		'"respuestaElegibilidadAfiliado":{"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""},"detalleElegibilidadAfiliado":{'+;
+		'"afiliado":{"ID":"32165478","nombre":"PEREZ JUAN","convenio":{"ID":1,"nombre":"IAPOS"},"plan":{"ID":1,"nombre":"Dpto ROSARIO"}},'+;
+		'"modoIngresoAfiliado":"M","observaciones":""}}}'
+=oConversor.jsonToCursor(pcJSON)
+BROWSE
 
-*!*	lJSonRechazada='{"rechazadas": ['+;
-*!*	'{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "00000001234567","nombre": "COSME FULANITO","convenio": {"ID": 2,'+;
-*!*	'"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
-*!*	'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
-*!*	'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 19999,"libro": "     ","folio": "     "},"nombre": "ATILIO"},'+;
-*!*	'"fechaPrestacion": "2014/09/25"},'+;
-*!*	'"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "669464","ID": "669464","Nombre": "TIROGLOBULINA - líquido de punción (TG LP)"'+;
-*!*	'},"cantidad": 1},"delegacion": {"ID": 1,"nombre": "Dpto ROSARIO"},"modoIngresoAfiliado": "M","sid": "31739","evaluacionSolicitudCompleta": {'+;
-*!*	'"evaluacionSolicitud": {"respuestaBase": {"tiposRespuestaValidacion": "NOAUTORIZA","mensaje": ""},'+;
-*!*	'"observaciones": ""},"leyenda": "La prestación NO PUEDE SER AUTORIZADA por el sistema,por favor diríjase a la delegación más cercana para consultar"'+;
-*!*	'}},'+;
-*!*	'{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "123456","nombre": "ESTE NO ES COSME ","convenio": {"ID": 2,'+;
-*!*	'"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
-*!*	'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
-*!*	'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 19999,"libro": "     ","folio": "     "},"nombre": "ATILIO"},'+;
-*!*	'"fechaPrestacion": "2014/09/25"},'+;
-*!*	'"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "669464","ID": "669464","Nombre": "TIROGLOBULINA - líquido de punción (TG LP)"'+;
-*!*	'},"cantidad": 1},"delegacion": {"ID": 1,"nombre": "Dpto ROSARIO"},"modoIngresoAfiliado": "M","sid": "31739","evaluacionSolicitudCompleta": {'+;
-*!*	'"evaluacionSolicitud": {"respuestaBase": {"tiposRespuestaValidacion": "NOAUTORIZA","mensaje": ""},'+;
-*!*	'"observaciones": ""},"leyenda": "La prestación NO PUEDE SER AUTORIZADA por el sistema,por favor diríjase a la delegación más cercana para consultar"'+;
-*!*	'}}]'+;
-*!*	'}'
+lJSonRechazada='{"rechazadas": ['+;
+'{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "00000001234567","nombre": "COSME FULANITO","convenio": {"ID": 2,'+;
+'"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
+'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
+'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 19999,"libro": "     ","folio": "     "},"nombre": "ATILIO"},'+;
+'"fechaPrestacion": "2014/09/25"},'+;
+'"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "669464","ID": "669464","Nombre": "TIROGLOBULINA - líquido de punción (TG LP)"'+;
+'},"cantidad": 1},"delegacion": {"ID": 1,"nombre": "Dpto ROSARIO"},"modoIngresoAfiliado": "M","sid": "31739","evaluacionSolicitudCompleta": {'+;
+'"evaluacionSolicitud": {"respuestaBase": {"tiposRespuestaValidacion": "NOAUTORIZA","mensaje": ""},'+;
+'"observaciones": ""},"leyenda": "La prestación NO PUEDE SER AUTORIZADA por el sistema,por favor diríjase a la delegación más cercana para consultar"'+;
+'}},'+;
+'{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "123456","nombre": "ESTE NO ES COSME ","convenio": {"ID": 2,'+;
+'"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
+'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
+'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 19999,"libro": "     ","folio": "     "},"nombre": "ATILIO"},'+;
+'"fechaPrestacion": "2014/09/25"},'+;
+'"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "669464","ID": "669464","Nombre": "TIROGLOBULINA - líquido de punción (TG LP)"'+;
+'},"cantidad": 1},"delegacion": {"ID": 1,"nombre": "Dpto ROSARIO"},"modoIngresoAfiliado": "M","sid": "31739","evaluacionSolicitudCompleta": {'+;
+'"evaluacionSolicitud": {"respuestaBase": {"tiposRespuestaValidacion": "NOAUTORIZA","mensaje": ""},'+;
+'"observaciones": ""},"leyenda": "La prestación NO PUEDE SER AUTORIZADA por el sistema,por favor diríjase a la delegación más cercana para consultar"'+;
+'}}]'+;
+'}'
 
-*!*	=oConversor.jsonToCursor(lJSonRechazada)
-*!*	BROWSE
+=oConversor.jsonToCursor(lJSonRechazada)
+BROWSE
 
-*!*	lJsonAutorizada='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
-*!*		'"convenio": {"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 52,"nombre": "2000/01 - Exento"}},"prestador": {"codigoProfesion": 4,'+;
-*!*		'"matricula": 64758,"libro": "     ","folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ",'+;
-*!*		'"folio": "     "},"nombre": "DR CHAPATIN"},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ","folio": "     "'+;
-*!*		'},"nombre": "DR CHAPATIN"},"fechaPrestacion": "2014/08/21"}'+;
-*!*		',"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420101","ID": "420101",'+;
-*!*		'"Nombre": "CONSULTA EN CONSULTORIO."},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0,'+;
-*!*		'"coseguroIva": 0,"coseguroPorcentaje": 0,"honorarios": 0,"derechos": 0,"iva": 0,"coseguroTexto": "Sin Cargo"}}],"fechaAutorizacion": "2014/08/21"}'
+lJsonAutorizada='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
+	'"convenio": {"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 52,"nombre": "2000/01 - Exento"}},"prestador": {"codigoProfesion": 4,'+;
+	'"matricula": 64758,"libro": "     ","folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ",'+;
+	'"folio": "     "},"nombre": "DR CHAPATIN"},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ","folio": "     "'+;
+	'},"nombre": "DR CHAPATIN"},"fechaPrestacion": "2014/08/21"}'+;
+	',"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420101","ID": "420101",'+;
+	'"Nombre": "CONSULTA EN CONSULTORIO."},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0,'+;
+	'"coseguroIva": 0,"coseguroPorcentaje": 0,"honorarios": 0,"derechos": 0,"iva": 0,"coseguroTexto": "Sin Cargo"}}],"fechaAutorizacion": "2014/08/21"}'
 
 
-*!*	* Puedo hacer un bucle hasta el proxima '},{ "baseAmbulatorio":' y luego un append
+* Puedo hacer un bucle hasta el proxima '},{ "baseAmbulatorio":' y luego un append
 
-*!*	*!*	
+*!*	
 
-*!*	DIMENSION aTiposDatos[2]
-*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
-*!*	aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
+DIMENSION aTiposDatos[2]
+aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
 
-*!*	=oConversor.jsonToCursor(lJsonAutorizada, @aTiposDatos)
-*!*	BROWSE
+=oConversor.jsonToCursor(lJsonAutorizada, @aTiposDatos)
+BROWSE
 
-*!*	lCantidadCampos = AFIELDS(aCampos,ALIAS())
+lCantidadCampos = AFIELDS(aCampos,ALIAS())
 
-*!*	FOR i=1 TO lCantidadCampos
-*!*		*MESSAGEBOX(LOWER(aCampos[i,1]))
-*!*	ENDFOR
-*!*	MODIFY STRUCTURE
+FOR i=1 TO lCantidadCampos
+	*MESSAGEBOX(LOWER(aCampos[i,1]))
+ENDFOR
+MODIFY STRUCTURE
 
 
 * Dos niveles de anidamiento
-*!*	pcjson='{"respuestaAutorizarLista": {'+;
-*!*				' respuestaBase: { '+;
-*!*	        	' "tiposRespuestaValidacion": "OK", '+;
-*!*	        	' "mensaje": ""
-*!*				'},'+;
-*!*	'"auditorias": [], '+;
-*!*	'"rechazadas": [], '+;
-*!*	'"autorizadaDTO": { "ID": "A02-L31-K62" } '+;
-*!*	'}'
+pcjson='{"respuestaAutorizarLista": {'+;
+			' respuestaBase: { '+;
+        	' "tiposRespuestaValidacion": "OK", '+;
+        	' "mensaje": "" '+;
+			'},'+;
+'"auditorias": [], '+;
+'"rechazadas": [], '+;
+'"autorizadaDTO": { "ID": "A02-L31-K62" } '+;
+'}'
 
 
 * Indico el nodo de donde cortar, un solo nivel
 
-*!*	pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
-*!*	'}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
-*!*	'"nombre": "GONZALEZ ROXANA L","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": { "ID": 1,"nombre": "Dpto ROSARIO"'+;
-*!*	'}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,'+;
-*!*	'"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {'+;
-*!*	'"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
-*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
-*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
-*!*	'}}],"fechaAutorizacion": "2014/07/01"},{"baseAmbulatorio": {"ID": "A02-R34-S19","afiliado": {"ID": "000000028148440","nombre": "PEDRIEL WALTER SEBAS",'+;
-*!*	'"convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,'+;
-*!*	'"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-*!*	'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
-*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
-*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
-*!*	'}}],"fechaAutorizacion": "2014/07/01"}]}'
+pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
+'}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
+'"nombre": "GONZALEZ ROXANA L","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": { "ID": 1,"nombre": "Dpto ROSARIO"'+;
+'}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,'+;
+'"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {'+;
+'"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+'}}],"fechaAutorizacion": "2014/07/01"},{"baseAmbulatorio": {"ID": "A02-R34-S19","afiliado": {"ID": "000000028148440","nombre": "PEDRIEL WALTER SEBAS",'+;
+'"convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,'+;
+'"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+'}}],"fechaAutorizacion": "2014/07/01"}]}'
 
-*!*	lNombreNodo = "autorizadas"
+lNombreNodo = "autorizadas"
 
-*!*	DIMENSION aTiposDatos[1]
-*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+DIMENSION aTiposDatos[1]
+aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 
-*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos)
+=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos)
 
-*!*	BROWSE
+BROWSE
 
-*!*	* Tengo que crear un cursor/tabla para cada caso de prueba!!
-*!*	*lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
+* Tengo que crear un cursor/tabla para cada caso de prueba!!
+*lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
 
 
-*!*	* Con dos niveles de anidamiento, obtengo cursor de un nodo
-*!*	pcjson=	'{"respuestaGeneral":{"estado":"OK","mensaje":""},"detalle":{"respuestaDetalle":{"estado":"ERROR","mensaje":""},'+;
-*!*			'"auditorias":[],"rechazadas":[],"autorizada":{"codigoAutorizacion":"123456"}}}'
+* Con dos niveles de anidamiento, obtengo cursor de un nodo
+pcjson=	'{"respuestaGeneral":{"estado":"OK","mensaje":""},"detalle":{"respuestaDetalle":{"estado":"ERROR","mensaje":""},'+;
+		'"auditorias":[],"rechazadas":[],"autorizada":{"codigoAutorizacion":"123456"}}}'
 
-*!*	DIMENSION aTiposDatos[1]
-*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+DIMENSION aTiposDatos[1]
+aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 
-*!*	lNombreNodo = "respuestaGeneral"
-*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
-*!*	BROWSE
+lNombreNodo = "respuestaGeneral"
+=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+BROWSE
 
-*!*	lNombreNodo = "respuestaDetalle"
-*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
-*!*	BROWSE
+lNombreNodo = "respuestaDetalle"
+=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+BROWSE
 
-*!*	lNombreNodo = "autorizada"
-*!*	=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
-*!*	BROWSE
+lNombreNodo = "autorizada"
+=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+BROWSE
 
 
 pcJson= '{'+;
@@ -193,10 +193,35 @@ aTiposDatos[1]=CREATEOBJECT("TipoDato","codigoAfiliado","C(15)")
 BROWSE
 
 
+pcJson= '{"respuestaComunicacion": {"idTransaccion": 17525,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""}},"auditorias": [{'+;
+'"baseAmbulatorio": {"ID": 1128832,"afiliado": {"ID": "000000018107469","nombre": "PIZZIO NESTOR DANIEL","convenio": {"ID": 2,"nombre": "AMR Salud"'+;
+'},"plan": {"ID": 139,"nombre": "PLAN NOVO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": "     ","folio": "     "},'+;
+'"efector": {"ID": {"codigoProfesion": 1,"matricula": 18765,"libro": "     ","folio": "     "},"nombre": "ABRAHAM MARCELO ELIAS"},"prescriptor": {'+;
+'"ID": {"codigoProfesion": 1,"matricula": 13442,"libro": "     ","folio": "     "},"nombre": "MATELLICANI GUSTAVO ANDRES"},"fechaPrestacion": "2014/10/15"'+;
+'},"prestacionRealizada": {"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "170101","ID": "170101","Nombre": "ELECTROCARDIOGRAMA EN CONSULTORIO"'+;
+'},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,'+;
+'"derechos": 0.00,"iva": 0.00,"coseguroTexto": "Sin Cargo "}},"estadoAuditoria": "RECHAZADO","comentarioAuditor": "AUTORIZADO E 29/09/2014\rESTEFANIA -ATENCION TELEFONICA",'+;
+'"fechaAutorizacion": "2014/10/15"},{"baseAmbulatorio": {"ID": 1163230,"afiliado": {"ID": "000000043491224","nombre": "GUERRA FLORENCIA LILIANA","convenio": {'+;
+'"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": "     ","folio": "     "},'+;
+'"efector": {"ID": {"codigoProfesion": 1,"matricula": 17223,"libro": "     ","folio": "     "},"nombre": "ALBORNOZ SILVANA ANGELINA"},"prescriptor": {"ID": {"codigoProfesion": 1,'+;
+'"matricula": 17223,"libro": "     ","folio": "     "},"nombre": "ALBORNOZ SILVANA ANGELINA"},"fechaPrestacion": "2014/11/13"},"prestacionRealizada": {"prestacionSolicitadaBase": {'+;
+'"nomencladorBase": {"codigoNomenclador": "300119","ID": "300119","Nombre": "OFTALMOSCOPIA INDIRECTA BINOCULAR CON ESQUEMA DE FONDO DE OJO."},"cantidad": 1},"importePrestacion": {'+;
+'"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "Sin Cargo "'+;
+'}},"estadoAuditoria": "APROBADO","comentarioAuditor": "\rESTEFANIA -ATENCION TELEFONICA","fechaAutorizacion": "2014/11/13"}]}'
+
+lNombreNodo = "auditorias"
+DIMENSION aTiposDatos[1]
+aTiposDatos[1]=CREATEOBJECT("TipoDato","Baseambulatorioid","N(12)")
+
+=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+BROWSE
+
 DEFINE CLASS Conversor AS CUSTOM
 
 	#DEFINE CRLF					CHR(13) + CHR(10)
 	
+	stringDelimitator = [']
+
 	estoyenarray=.F.
 	columnacreada=.F.
 	esunobjeto=.F.
@@ -205,6 +230,7 @@ DEFINE CLASS Conversor AS CUSTOM
 	agregoregistro=.F.
 	nodoBuscado = ""
 	nodoEncontrado = .NULL.
+	verbose=.F.
 	DIMENSION acampos[1]
 	
 	PROCEDURE inicializaratributos()
@@ -215,7 +241,7 @@ DEFINE CLASS Conversor AS CUSTOM
 			THIS.nombreprefijo=""
 			THIS.agregoregistro=.F.
 			THIS.nodoBuscado = ""
-			THIS.nodoEncontrado = .NULL.			
+			THIS.nodoEncontrado = .NULL.
 			* Seteos basicos e importantes!!!!!
 			SET SAFETY OFF
 			SET EXACT ON
@@ -225,7 +251,8 @@ DEFINE CLASS Conversor AS CUSTOM
 	* Este metodo es para mas un solo anidamiento de objetos
 	* Devuelvo un cursor del nodo especificado
 	* Tiene que estar en primer nivel y no contener arrays anidados
-	PROCEDURE jsonAColeccion(pcjson, pNombreNodo,aTiposDatos)
+	PROCEDURE jsonAColeccion(pcjson, pNombreNodo,aTiposDatos, pVerbose)
+		THIS.verbose = pVerbose
 		
 		THIS.inicializaratributos()
 
@@ -234,9 +261,11 @@ DEFINE CLASS Conversor AS CUSTOM
 		THIS.obtenerNodo(pcJSON)
 		
 		IF !ISNULL(THIS.nodoEncontrado) THEN
-			CREATE CURSOR cNodo(valor memo)
-			INSERT INTO cNodo(valor)VALUES(THIS.nodoEncontrado)
-			BROWSE
+			IF THIS.verbose THEN
+				CREATE CURSOR cNodo(valor memo)
+				INSERT INTO cNodo(valor)VALUES(THIS.nodoEncontrado)
+				BROWSE
+			ENDIF	
 
 			THIS.jsonToCursor("{" + THIS.nodoEncontrado + "}", @aTiposDatos)
 		ELSE
@@ -344,7 +373,12 @@ DEFINE CLASS Conversor AS CUSTOM
 			RETURN ""
 		ENDIF
 		
-		IF VARTYPE(aTiposDatos) <>"U"
+		
+		* Paso a una propiedad de la clase el array indicado
+		IF VARTYPE(aTiposDatos) ="L"
+		
+		ELSE
+		
 			LOCAL lCantidad
 			lCantidad = ALEN(aTiposDatos)
 			DIMENSION THIS.aCampos(lCantidad)
@@ -482,12 +516,12 @@ DEFINE CLASS Conversor AS CUSTOM
 						lTipoDato="date"
 	          
 					CASE INLIST(cValue,"true","false")  && Boolean value
-						*uValue = (cValue == "true")
 						IF cValue == "true" THEN
 							uValue = " .T. "
 						ELSE
 							uValue = " .F. "
 						ENDIF
+
 						lTipoDato="logical"
 
 					CASE UPPER(cValue) == "NULL" OR UPPER(cValue) == ".NULL." && Null value  &&  cesar
@@ -528,6 +562,7 @@ DEFINE CLASS Conversor AS CUSTOM
 				ENDCASE
 
 				LOCAL lSentencia, lNombreCursor, lTipoDatoForzado, lNombreColumna, lSufijo
+				
 				lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
 				
 				lTipoDatoForzado= THIS.obtenerTipoDato(lNombrecolumna)
@@ -546,7 +581,7 @@ DEFINE CLASS Conversor AS CUSTOM
 					lSufijo = ""
 					
 					IF !THIS.columnacreada THEN
-						lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
+						lSentencia="ALTER TABLE " + THIS.nombrecursor + " ADD COLUMN " + lNombreColumna + " " + lTipoDato
 						&lSentencia
 					ENDIF
 
@@ -554,7 +589,7 @@ DEFINE CLASS Conversor AS CUSTOM
 					
 					lSufijo =" ALL"
 				
-					lSentencia="ALTER TABLE cDatos ADD COLUMN " + lNombreColumna + " " + lTipoDato
+					lSentencia="ALTER TABLE " + THIS.nombrecursor + " ADD COLUMN " + lNombreColumna + " " + lTipoDato
 					&lSentencia
 
 					IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor)=0 THEN
@@ -565,60 +600,86 @@ DEFINE CLASS Conversor AS CUSTOM
 				ENDIF
 				
 				lSentencia="REPLACE " + lNombreColumna + " WITH " + uValue
-				&lSentencia				
+				&lSentencia
 
 
 			ENDFOR
 	      
 		ENDFOR
 		
-		*RETURN oResult
-
 	ENDPROC
 
 	PROCEDURE _Split(pcJSON)
-		 *
-		LOCAL nBlockCount,cObj,lOpenQuote,cChar
-		nBlockCount = 0  
+		
+	LOCAL nBlockCount,cObj,lOpenQuote,cChar
+
+		nBlockCount = 0
 		cObj = pcJSON
 		lOpenQuote = .F.
-		
-		LOCAL stringDelimitator
-		stringDelimitator = ["]
-		
+		lInicioValorAtributo=.F.
+		lTipoValor=""
+
 		FOR j = 1 TO LEN(cObj)
-			cChar = SUBSTR(cObj, j, 1)
-			DO CASE
-				CASE cChar $ "[{"
-		           nBlockCount = nBlockCount + 1
-		   
-				CASE cChar $ "]}"
-		           nBlockCount = nBLockCount - 1
 
-				CASE cChar $ stringDelimitator
-					IF lOpenQuote
-						nBlockCount = nBLockCount - 1
-					ELSE
-						nBlockCount = nBlockCount + 1 
-					ENDIF
-					lOpenQuote = !lOpenQuote
+		    cChar = SUBSTR(cObj, j, 1)
 
-		    	CASE cChar = "," AND nBlockCount = 0
-					cObj = STUFF(cObj,j,1,CHR(254))
+		    DO CASE
+
+		        * Hasta aqui llego el valor del atributo String
+		        CASE lTipoValor="STRING" AND cChar $ '"'
+		            lTipoValor=""
+
+		        * De esta manera sabemos que el tipo del atributo es un NUMBER
+		        CASE lInicioValorAtributo AND INLIST(cChar,'-','+','1','2','3','4','5','6','7','8','9','0','e','E')
+		            lTipoValor='NUMBER'
+		            lInicioValorAtributo=.F.
+
+		        * De esta manera sabemos que es el comienzo del atributo STRING
+		        CASE lInicioValorAtributo AND cChar $ '"'
+		            lTipoValor="STRING"
+		            lInicioValorAtributo=.F.
+
+		        CASE cChar $ "[{"
+		            nBlockCount = nBlockCount + 1
+
+		        CASE cChar $ "]}"
+		            nBlockCount = nBLockCount - 1
+
+		        CASE cChar $ THIS.stringDelimitator
+		            IF lOpenQuote
+		                nBlockCount = nBLockCount - 1
+		            ELSE
+		                nBlockCount = nBlockCount + 1 
+		            ENDIF
+		            lOpenQuote = !lOpenQuote
+
+		        * Esto nos indica que es un inicio de valor de atributo
+		        * y no estoy adentro de un atributo
+		        CASE !lInicioValorAtributo AND cChar $ ":" AND lTipoValor<>"STRING"
+		            lInicioValorAtributo=.T.
+
+		        * Tomamos la coma como fin de bloque cuando no esta entre caracteres escapados y no estamos adentro del valor de un atributo STRING
+		        CASE cChar = "," AND nBlockCount = 0 AND lTipoValor<>"STRING"
+		            cObj = STUFF(cObj,j,1,CHR(254))
+		            lTipoValor=""
 			ENDCASE
-		ENDFOR   
-		 
+
+		ENDFOR
+
+		* Divido la cadena marcada con CHR(254), 
+		* con la misma creo un array de bloques y devuelvo una coleccion de Cadenas
 		LOCAL ARRAY aObjects[1]
 		LOCAL nCount, i, oResult
+		
 		oResult = CREATEOBJECT("Collection")
 		nCount = ALINES(aObjects, STRT(cObj,CHR(254),CRLF))
 		FOR i = 1 TO nCount
 			oResult.add(aObjects[i])
 		ENDFOR
-		 
+
 		RETURN oResult
-		 *
-	 ENDPROC
+
+	ENDPROC
 	 
 	 
 	PROCEDURE _decodeString(pcString)
@@ -677,6 +738,10 @@ DEFINE CLASS Conversor AS CUSTOM
 	PROCEDURE obtenerTipoDato(pNombreCampo)
 		
 		LOCAL campo
+		
+		IF VARTYPE(THIS.aCampos) = "L" THEN
+			RETURN ""
+		ENDIF
 		
 		FOR EACH campo IN THIS.aCampos
 		
