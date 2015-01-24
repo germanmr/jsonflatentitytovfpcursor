@@ -17,5 +17,6 @@ TODO:
 * Hacer un equals para cursores y clases( indicar que propiedades comparamos? )
 * Refactorizar para incluir este conversor en un proyecto( inicializar, objeto publico conversor, integrar con rest client, etc )
 * Escribir todo en ingles( codigo, documentacion y demás)?
+* Utilizar el conversor de cursores de qdfoxjson
 
 
