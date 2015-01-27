@@ -5,53 +5,136 @@
 
 SET DEFAULT TO d:\vfp\proyectos\jsonflatentitytovfpcursor
 
+SET PROCEDURE TO D:\vfp\Proyectos\colecciones\coleccionvfpmenorque8 ADDITIVE
+CLEAR
+
 LOCAL pcJSON
 LOCAL oConversor
 
 oConversor=CREATEOBJECT("Conversor")
 
-* Bien!!!!!!!
+********************************************* Caso 1
 pcJSON='{"nombre":"German","apellido":"muñoz"}'
-=oConversor.jsonToCursor(pcJSON)
-BROWSE
 
+=oConversor.jsonACursor(pcjson )
+
+CREATE CURSOR cObtenido(nombre C(100),apellido C(100))
+INSERT INTO cObtenido(nombre,apellido) VALUES(PADR("German",100," "),PADR("muñoz",100," "))
+
+IF !equalsCursor("cDatos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 1", 48,"Atencion")
+	RETURN .F.
+ENDIF
+
+
+******************************************** Caso de prueba 2
 pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
-=oConversor.jsonToCursor(pcJSON)
-BROWSE
+
+=oConversor.jsonACursor(pcJSON)
+
+CREATE CURSOR cObtenido(nombre C(100) , apellido Character(100), telefonodescripcion Character(100), telefononumero Numeric(10))
+INSERT INTO cObtenido(nombre, apellido, telefonodescripcion, telefononumero);
+	VALUES(PADR("German",100," "), PADR("muñoz",100," "), PADR("Casa",100," "),123)
+
+IF !equalsCursor("cDatos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 2", 48,"Atencion")
+	RETURN .F.
+ENDIF
+
+
+********************************************* Caso de prueba 3
 
 pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
-=oConversor.jsonToCursor(pcJSON)
-BROWSE
+=oConversor.jsonACursor(pcJSON)
+
+
+CREATE CURSOR cObtenido(nombre C(100) , apellido C(100), telefonodescripcion C(100), detallecaracteristica C(100),  detallenumero C(100))
+INSERT INTO cObtenido(nombre, apellido, telefonodescripcion, detallecaracteristica, detallenumero );
+	VALUES(PADR("German",100," "), PADR("muñoz",100," "), PADR("Casa",100," "), PADR("314",100," "), PADR("123456",100," "))
+
+IF !equalsCursor("cDatos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 3", 48,"Atencion")
+	RETURN .F.
+ENDIF
+
+******************************************** Caso 4
 
 pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
-=oConversor.jsonToCursor(pcJSON)
-BROWSE
+=oConversor.jsonACursor(pcJSON)
+
+CREATE CURSOR cObtenido(profesionesid N(10))
+INSERT INTO cObtenido(profesionesid) VALUES(1)
+INSERT INTO cObtenido(profesionesid) VALUES(2)
+INSERT INTO cObtenido(profesionesid) VALUES(3)
+
+IF !equalsCursor("cDatos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 4", 48,"Atencion")
+	RETURN .F.
+ENDIF
+
+
+******************************************** Caso 5
 
 * Si aplano la entidad me queda como una fila
-
 pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-=oConversor.jsonToCursor(pcJSON)
-BROWSE
+=oConversor.jsonACursor(pcJSON)
 
-pcjson = '{"employees":[{"firstName":"Primero", "lastName":"perez"},{"firstName":"segundo", "lastName":"Gonzalez"}]}'
-=oConversor.jsonToCursor(pcJSON)
-BROWSE
+CREATE CURSOR cObtenido(profesionesid N(10), profesionesnombre C(100))
+INSERT INTO cObtenido(profesionesid, profesionesnombre) VALUES(1,PADR("MEDICO",100," "))
+INSERT INTO cObtenido(profesionesid, profesionesnombre) VALUES(2,PADR("FONOAUDIOLOGO",100," "))
+INSERT INTO cObtenido(profesionesid, profesionesnombre) VALUES(3,PADR("KINESIOLOGO",100," "))
 
-pcjson='{tiposRespuestaValidacion: "OK",mensaje: "Hay comunicacion"}'
-=oConversor.jsonToCursor(pcJSON)
-BROWSE
+IF !equalsCursor("cDatos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 5", 48,"Atencion")
+	RETURN .F.
+ENDIF
 
+******************************************** Caso 6 - Object + Array + 
 pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
 		'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-=oConversor.jsonToCursor(pcJSON)
-BROWSE
+=oConversor.jsonACursor(pcJSON)
+
+CREATE CURSOR cObtenido(;
+respuestaComunicacionidTransaccion N(10) ,respuestaBasetiposRespuestaValidacion C(100), respuestaBasemensaje C(100),profesionesid N(10), profesionesnombre C(100))
+INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje, profesionesid, profesionesnombre);
+	VALUES( 15984, PADR("OK",100," "), PADR("",100," "), 1, PADR("MEDICO",100," ") )
+INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
+	VALUES( 0, PADR(" ",100," "), PADR("",100," "), 2, PADR("FONOAUDIOLOGO",100," ") )
+INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
+	VALUES( 0, PADR(" ",100," "), PADR("",100," "), 3, PADR("KINESIOLOGO",100," ") )
+
+IF !equalsCursor("cDatos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 6", 48,"Atencion")
+	RETURN .F.
+ENDIF
+
+
+******************************************** Caso 7 - Object grande - con anidaciones de objects
 
 pcjson= '{"respuestaComunicacion":{"idTransaccion":316,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
 		'"respuestaElegibilidadAfiliado":{"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""},"detalleElegibilidadAfiliado":{'+;
 		'"afiliado":{"ID":"32165478","nombre":"PEREZ JUAN","convenio":{"ID":1,"nombre":"IAPOS"},"plan":{"ID":1,"nombre":"Dpto ROSARIO"}},'+;
 		'"modoIngresoAfiliado":"M","observaciones":""}}}'
-=oConversor.jsonToCursor(pcJSON)
-BROWSE
+
+=oConversor.jsonACursor(pcJSON)
+
+CREATE CURSOR cObtenido(;
+respuestaComunicacionidTransaccion N(10) ,respuestaBasetiposRespuestaValidacion C(100), respuestaBasemensaje C(100),profesionesid N(10), profesionesnombre C(100))
+INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje, profesionesid, profesionesnombre);
+	VALUES( 15984, PADR("OK",100," "), PADR("",100," "), 1, PADR("MEDICO",100," ") )
+INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
+	VALUES( 0, PADR(" ",100," "), PADR("",100," "), 2, PADR("FONOAUDIOLOGO",100," ") )
+INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
+	VALUES( 0, PADR(" ",100," "), PADR("",100," "), 3, PADR("KINESIOLOGO",100," ") )
+
+
+IF !equalsCursor("cDatos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 6", 48,"Atencion")
+	RETURN .F.
+ENDIF
+
+
+******************************************** Caso 8 - Array con entidades objects anidadas
 
 lJSonRechazada='{"rechazadas": ['+;
 '{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "00000001234567","nombre": "COSME FULANITO","convenio": {"ID": 2,'+;
@@ -76,8 +159,10 @@ lJSonRechazada='{"rechazadas": ['+;
 '}}]'+;
 '}'
 
-=oConversor.jsonToCursor(lJSonRechazada)
+=oConversor.jsonACursor(lJSonRechazada)
 BROWSE
+
+******************************************** Caso 9 - Object con array de objectos anidados, con casteo de atributos
 
 lJsonAutorizada='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
 	'"convenio": {"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 52,"nombre": "2000/01 - Exento"}},"prestador": {"codigoProfesion": 4,'+;
@@ -89,38 +174,15 @@ lJsonAutorizada='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "00
 	'"coseguroIva": 0,"coseguroPorcentaje": 0,"honorarios": 0,"derechos": 0,"iva": 0,"coseguroTexto": "Sin Cargo"}}],"fechaAutorizacion": "2014/08/21"}'
 
 
-* Puedo hacer un bucle hasta el proxima '},{ "baseAmbulatorio":' y luego un append
-
-*!*	
-
 DIMENSION aTiposDatos[2]
 aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
 
-=oConversor.jsonToCursor(lJsonAutorizada, @aTiposDatos)
+=oConversor.jsonACursor(lJsonAutorizada, @aTiposDatos)
 BROWSE
 
-lCantidadCampos = AFIELDS(aCampos,ALIAS())
-
-FOR i=1 TO lCantidadCampos
-	*MESSAGEBOX(LOWER(aCampos[i,1]))
-ENDFOR
-MODIFY STRUCTURE
-
-
-* Dos niveles de anidamiento
-pcjson='{"respuestaAutorizarLista": {'+;
-			' respuestaBase: { '+;
-        	' "tiposRespuestaValidacion": "OK", '+;
-        	' "mensaje": "" '+;
-			'},'+;
-'"auditorias": [], '+;
-'"rechazadas": [], '+;
-'"autorizadaDTO": { "ID": "A02-L31-K62" } '+;
-'}'
-
-
-* Indico el nodo de donde cortar, un solo nivel
+******************************************** Caso 10 - Entidad con varios niveles de anidamiento pero solo tomo un nodo, con casteo de atributos
+	* Indico el nodo de donde cortar, un solo nivel
 
 pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
 '}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
@@ -145,15 +207,13 @@ lNombreNodo = "autorizadas"
 DIMENSION aTiposDatos[1]
 aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 
-=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos)
+=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos)
 
 BROWSE
 
-* Tengo que crear un cursor/tabla para cada caso de prueba!!
-*lResultado=equalscursor(lCursorObtenido,lCursorEsperado)
+******************************************** Caso 11, solo tomo valores de atributos de una entidad grande
 
-
-* Con dos niveles de anidamiento, obtengo cursor de un nodo
+* Con dos niveles de anidamiento, obtengo cursor de un nodo!!
 pcjson=	'{"respuestaGeneral":{"estado":"OK","mensaje":""},"detalle":{"respuestaDetalle":{"estado":"ERROR","mensaje":""},'+;
 		'"auditorias":[],"rechazadas":[],"autorizada":{"codigoAutorizacion":"123456"}}}'
 
@@ -161,17 +221,22 @@ DIMENSION aTiposDatos[1]
 aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 
 lNombreNodo = "respuestaGeneral"
-=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
 BROWSE
+
+
 
 lNombreNodo = "respuestaDetalle"
-=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
 BROWSE
+
 
 lNombreNodo = "autorizada"
-=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
 BROWSE
 
+
+*********************************** Caso 12 - Solo tomo el valor de un atributo, que es un array de valores simples
 
 pcJson= '{'+;
 '"efector":{"codigoProfesion":1,"matricula":987,"libro":"     ","folio":"     "},'+;
@@ -189,9 +254,10 @@ lNombreNodo = "prestacionSolicitadas"
 DIMENSION aTiposDatos[1]
 aTiposDatos[1]=CREATEOBJECT("TipoDato","codigoAfiliado","C(15)")
 
-=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
 BROWSE
 
+******************************************** Caso 18, soo tomo el valor de un atributo, quse un array de objects
 
 pcJson= '{"respuestaComunicacion": {"idTransaccion": 17525,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""}},"auditorias": [{'+;
 '"baseAmbulatorio": {"ID": 1128832,"afiliado": {"ID": "000000018107469","nombre": "PIZZIO NESTOR DANIEL","convenio": {"ID": 2,"nombre": "AMR Salud"'+;
@@ -213,15 +279,22 @@ lNombreNodo = "auditorias"
 DIMENSION aTiposDatos[1]
 aTiposDatos[1]=CREATEOBJECT("TipoDato","Baseambulatorioid","N(12)")
 
-=oConversor.jsonAColeccion(pcjson, lNombreNodo, @aTiposDatos )
+=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
 BROWSE
+
+
+
+************************************************************************************************************
+************************************************************************************************************
+************************************************************************************************************
+************************************************************************************************************
 
 DEFINE CLASS Conversor AS CUSTOM
 
 	#DEFINE CRLF					CHR(13) + CHR(10)
 	
 	stringDelimitator = [']
-
+	
 	estoyenarray=.F.
 	columnacreada=.F.
 	esunobjeto=.F.
@@ -234,7 +307,6 @@ DEFINE CLASS Conversor AS CUSTOM
 	DIMENSION acampos[1]
 	
 	PROCEDURE inicializaratributos()
-			MESSAGEBOX("Hacer el equals de cursor!!")
 			THIS.estoyenarray=.F.
 			THIS.columnacreada=.F.
 			THIS.esunobjeto=.F.
@@ -252,27 +324,33 @@ DEFINE CLASS Conversor AS CUSTOM
 	* Este metodo es para mas un solo anidamiento de objetos
 	* Devuelvo un cursor del nodo especificado
 	* Tiene que estar en primer nivel y no contener arrays anidados
-	PROCEDURE jsonAColeccion(pcjson, pNombreNodo,aTiposDatos, pVerbose)
+	PROCEDURE jsonACursor(pcjson, pNombreNodo, aTiposDatos, pVerbose)
+
 		THIS.verbose = pVerbose
 		
 		THIS.inicializaratributos()
 
-		
-		THIS.nodoBuscado = pNombreNodo
-		THIS.obtenerNodo(pcJSON)
-		
-		IF !ISNULL(THIS.nodoEncontrado) THEN
-			IF THIS.verbose THEN
-				CREATE CURSOR cNodo(valor memo)
-				INSERT INTO cNodo(valor)VALUES(THIS.nodoEncontrado)
-				BROWSE
-			ENDIF	
-
-			THIS.jsonToCursor("{" + THIS.nodoEncontrado + "}", @aTiposDatos)
+		IF VARTYPE(pNombreNodo)="L" THEN 
+			THIS.jsonToCursor( pcjson )
 		ELSE
-			* No existe el nodo en las condiciones indicadas
-			RETURN .NULL.
-		ENDIF
+			
+			THIS.nodoBuscado = pNombreNodo
+			THIS.obtenerNodo(pcJSON)
+			
+			IF !ISNULL(THIS.nodoEncontrado) THEN
+				IF THIS.verbose THEN
+					CREATE CURSOR cNodo(valor memo)
+					INSERT INTO cNodo(valor)VALUES(THIS.nodoEncontrado)
+					BROWSE
+				ENDIF
+
+				THIS.jsonToCursor("{" + THIS.nodoEncontrado + "}", @aTiposDatos)
+			ELSE
+				* No existe el nodo en las condiciones indicadas
+				RETURN .NULL.
+			ENDIF
+
+		ENDIF	
 		
 	ENDPROC
 
@@ -375,11 +453,8 @@ DEFINE CLASS Conversor AS CUSTOM
 		ENDIF
 		
 		
-		* Paso a una propiedad de la clase el array indicado
-		IF VARTYPE(aTiposDatos) ="L"
-		
-		ELSE
-		
+		* Paso a una propiedad de la clase, el array indicado
+		IF !VARTYPE(aTiposDatos) ="L" THEN
 			LOCAL lCantidad
 			lCantidad = ALEN(aTiposDatos)
 			DIMENSION THIS.aCampos(lCantidad)
@@ -508,6 +583,7 @@ DEFINE CLASS Conversor AS CUSTOM
 						lTipoDato="C(100)"
 	               
 					CASE LEFT(cValue,1) = [@]   && Date/DateTime
+						* THIS.formatofecha???
 						cValue = SUBSTR(cValue,2)
 						IF LEN(cValue) = 8
 							uValue = CTOD(TRANSFORM(cValue,"@R ^9999-99-99"))
@@ -682,7 +758,6 @@ DEFINE CLASS Conversor AS CUSTOM
 
 	ENDPROC
 	 
-	 
 	PROCEDURE _decodeString(pcString)
 		pcString = STRT(pcString, [%CR%], CHR(13))
 		pcString = STRT(pcString, [%LF%], CHR(10))
@@ -783,7 +858,7 @@ PROCEDURE equalscursor(pCursorObtenido,pCursorEsperado)
 		RETURN .F.
 	ENDIF
 
-	IF !USED(lCursorObtenido) THEN
+	IF !USED(pCursorObtenido) THEN
 		? "El alias: " + pCursorObtenido + " no esta en uso"
 		RETURN .F.
 	ENDIF
@@ -791,17 +866,17 @@ PROCEDURE equalscursor(pCursorObtenido,pCursorEsperado)
 	* Estructura
 	LOCAL ARRAY aCamposObtenido[1,1]
 	LOCAL ARRAY aCamposEsperado[1,1]
-	LOCAL campo, lCantidadObtenido, lCantidadEsperado
+	LOCAL campo, lCantidadCamposObtenido, lCantidadCamposEsperado
 	
-	lCantidadObtenido = AFIELDS(aCamposObtenido,pCursorObtenido)
-	lCantidadEsperado = AFIELDS(aCamposEsperado,pCursorEsperado)
+	lCantidadCamposObtenido = AFIELDS(aCamposObtenido,pCursorObtenido)
+	lCantidadCamposEsperado = AFIELDS(aCamposEsperado,pCursorEsperado)
 	
-	IF lCantidadEsperado <> lCantidadObtenido THEN
-		? "Los cursores no tiene la misma cantidad de campos, Esperado: " + ALLTRIM(STR(lCantidadEsperado)) + ", obtenido: " + ALLTRIM(STR(lCantidadObtenido))
+	IF lCantidadCamposEsperado <> lCantidadCamposObtenido THEN
+		? "Los cursores no tiene la misma cantidad de campos, Esperado: " + ALLTRIM(STR(lCantidadCamposEsperado)) + ", obtenido: " + ALLTRIM(STR(lCantidadCamposObtenido))
 		RETURN .F.
 	ENDIF
 	
-	FOR i = TO lCantidadObtenido
+	FOR i = 1 TO lCantidadCamposObtenido
 		IF LOWER(aCamposObtenido[i,1])<> LOWER(aCamposEsperado[i,1]) THEN
 			? "El campo numero: "+ALLTRIM(STR(i))+" esta mal, valor esperado: " +ALLTRIM(aCamposObtenido[i,1]) + " valor obtenido: " + aCamposEsperado[i,1]
 			RETURN .F.
@@ -809,45 +884,65 @@ PROCEDURE equalscursor(pCursorObtenido,pCursorEsperado)
 	ENDFOR
 	
 	* Valores
-	LOCAL lCantidadObtenido
+	LOCAL lCantidadRegistrosObtenido
 	SELECT &pCursorObtenido.
-	COUNT TO lCantidadObtenido
+	COUNT TO lCantidadRegistrosObtenido
+	GO TOP
 
-	LOCAL lCantidadEsperado
+	LOCAL lCantidadRegistrosEsperado
 	SELECT &pCursorEsperado.
-	COUNT TO lCantidadEsperado
+	COUNT TO lCantidadRegistrosEsperado
+	GO TOP
 	
-	IF lCantidadObtenido<>lCantidadEsperado THEN
-		? "Cantidad de registro disinta, esperada: " + ALLTRIM(STR(lCantidadEsperado)) + " obtenido: "+ ALLTRIM(STR(lCantidadObtenido))
+	IF lCantidadRegistrosObtenido<>lCantidadRegistrosEsperado THEN
+		? "Cantidad de registro distinta, esperada: " + ALLTRIM(STR(lCantidadRegistrosEsperado)) + " obtenido: "+ ALLTRIM(STR(lCantidadRegistrosObtenido))
 		RETURN .F.
 	ENDIF
+	
+	LOCAL lValorEsperado, lValorObtenido
 	
 	SELECT &pCursorEsperado.
 	* Para cada fila
 	SCAN
 	
-		FOR i=1 TO lCantidadEsperado
-			lEsperado = pCursorObtenido.&aCamposObtenido[i,1].
-			lObtenido = pCursorEsperado.&aCamposEsperado[i,1].
-			IF lEsperado<>lObtenido THEN
+		* Para cada campo
+		FOR i=1 TO lCantidadCamposEsperado
+			
+			lSentencia =  "lValorEsperado = " + pCursorObtenido +"."+ aCamposObtenido[i,1]
+			&lSentencia
+			lSentencia =  "lValorObtenido = " + pCursorEsperado +"."+ aCamposEsperado[i,1]
+			&lSentencia
+			
+			IF lValorEsperado <> lValorObtenido THEN
 				? "El valor del campo esta mal"
 				? "Esperado:"
-				?lEsperado
+				?lValorEsperado
 				? "Obtenido"
-				? lObtenido
+				? lValorObtenido
 				RETURN .F.
 			ENDIF
 		ENDFOR
+
+		* tengo que avanzar en ambos cursores
+		SELECT &pCursorObtenido.
+		IF !EOF() THEN
+			SKIP 1
+		ENDIF
+
+		SELECT &pCursorEsperado.		
 		
-	ENDFOR
+	ENDSCAN
 	
 	RETURN .T.
 
 ENDPROC
 
 
-
-
-
+* ADDPROPERTY
+* Simula la funcion ADDPROPERTY existente en VFP9
+*
+PROCEDURE AddProperty(poObject, pcProperty, puValue)
+	poObject.addProperty(pcProperty, puValue)
+ENDPROC
 
 
