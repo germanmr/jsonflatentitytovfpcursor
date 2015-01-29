@@ -189,7 +189,7 @@ pcJson='{"rechazadas": ['+;
 
 =oConversor.jsonACursor(pcJson)
 
-? " Caso 8 con exito "
+? " Caso 8 con exito  - HACER EQUALS CURSOR"
 
 ******************************************** Caso 9 - Object con array de objectos anidados, con casteo de atributos
 #DEFINE CASO9 9
@@ -210,7 +210,7 @@ aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
 
 =oConversor.jsonACursor(pcJson, .F., @aTiposDatos)
 
-? " Caso 9 con exito "
+? " Caso 9 con exito - HACER EQUALS CURSOR"
 
 ******************************************** Caso 10 - Entidad con varios niveles de anidamiento pero solo tomo un nodo, con casteo de atributos
 	* Indico el nodo de donde cortar, un solo nivel
@@ -241,7 +241,7 @@ aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 
 =oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos)
 
-? " Caso 10 con exito "
+? " Caso 10 con exito  - HACER EQUALS CURSOR"
 
 ******************************************** Caso 11, solo tomo valores de atributos de una entidad grande
 #DEFINE CASO11 11
@@ -268,13 +268,24 @@ lNombreNodo = "respuestaDetalle"
 
 =oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
 
-CREATE CURSOR cObtenido(respuestadetalleestado)
+CREATE CURSOR cObtenido(respuestadetalleestado C(100), respuestadetallemensaje C(100))
+INSERT INTO cObtenido(respuestadetalleestado, respuestadetallemensaje) values("ERROR","")
 
-MODIFY STRUCTURE
-
+IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 11.B", 48,"Atencion")
+	RETURN .F.
+ENDIF
 
 lNombreNodo = "autorizada"
 =oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
+
+CREATE CURSOR cObtenido(autorizadacodigoautorizacion C(100))
+INSERT INTO cObtenido(autorizadacodigoautorizacion) VALUES (PADR("123456",100," "))
+
+IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 11.C", 48,"Atencion")
+	RETURN .F.
+ENDIF
 
 ? " Caso 11 con exito "
 
@@ -299,7 +310,7 @@ aTiposDatos[1]=CREATEOBJECT("TipoDato","codigoAfiliado","C(15)")
 
 =oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
 
-? " Caso 12 con exito "
+? " Caso 12 con exito  - HACER EQUALS CURSOR"
 
 ******************************************** Caso 13, solo tomo el valor de un atributo, que un array de objects
 
@@ -327,7 +338,7 @@ aTiposDatos[1]=CREATEOBJECT("TipoDato","Baseambulatorioid","N(12)")
 
 =oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
 
-? " Caso 13 con exito "
+? " Caso 13 con exito  - HACER EQUALS CURSOR"
 
 *****************************************  Caso 14 -
 
@@ -363,7 +374,7 @@ aTiposDatosAutorizada[12]=CREATEOBJECT("TipoDato","baseambulatorioid","C(11)")
 
 =oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatosAutorizada )
 
-? " Caso 14 con exito "
+? " Caso 14 con exito  - HACER EQUALS CURSOR"
 
 *******************************************************  Caso 15 - Arra y con dos entidades object, tomo el valor de una tributo
 #DEFINE CASO15 15
@@ -403,7 +414,7 @@ aTiposDatos[6]=CREATEOBJECT("TipoDato","baseambulatorioid","N(12)")
 
 =oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatos )
 
-? "Exito Caso de prueba 15"
+? "Exito Caso de prueba 15 - HACER EQUALS CURSOR"
 
 
 ********************** Caso 16 - Columnas con nombres repetidos, array con objetos de entidades con atributos de nombres iguales
@@ -418,7 +429,14 @@ lNombreAtributo = .F.
 
 =oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatos )
 
-BROWSE
+CREATE CURSOR cObtenido(idnombre C(100), idnombre1 C(100))
+INSERT INTO cObtenido(idnombre, idnombre1) VALUES(PADR("german",100," "),PADR("fabricio",100," "))
+INSERT INTO cObtenido(idnombre, idnombre1) VALUES(PADR("marcos",100," "),PADR("matias",100," "))
+
+IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 16", 48,"Atencion")
+	RETURN .F.
+ENDIF
 
 ************************************************************************************************************
 ************************************************************************************************************
