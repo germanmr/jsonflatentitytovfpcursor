@@ -164,7 +164,7 @@ ENDIF
 ******************************************** Caso 8 - Array con entidades objects anidadas
 #DEFINE CASO8 8
 
-lJSonRechazada='{"rechazadas": ['+;
+pcJson='{"rechazadas": ['+;
 '{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "00000001234567","nombre": "COSME FULANITO","convenio": {"ID": 2,'+;
 '"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
 '"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
@@ -187,14 +187,14 @@ lJSonRechazada='{"rechazadas": ['+;
 '}}]'+;
 '}'
 
-=oConversor.jsonACursor(lJSonRechazada)
+=oConversor.jsonACursor(pcJson)
 
 ? " Caso 8 con exito "
 
 ******************************************** Caso 9 - Object con array de objectos anidados, con casteo de atributos
 #DEFINE CASO9 9
 
-lJsonAutorizada='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
+pcJson='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
 	'"convenio": {"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 52,"nombre": "2000/01 - Exento"}},"prestador": {"codigoProfesion": 4,'+;
 	'"matricula": 64758,"libro": "     ","folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ",'+;
 	'"folio": "     "},"nombre": "DR CHAPATIN"},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ","folio": "     "'+;
@@ -208,7 +208,7 @@ DIMENSION aTiposDatos[2]
 aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
 
-=oConversor.jsonACursor(lJsonAutorizada, .F., @aTiposDatos)
+=oConversor.jsonACursor(pcJson, .F., @aTiposDatos)
 
 ? " Caso 9 con exito "
 
@@ -256,14 +256,25 @@ aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 lNombreNodo = "respuestaGeneral"
 =oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
 
+CREATE CURSOR cObtenido(respuestageneralestado C(100), respuestageneralmensaje C(100))
+INSERT INTO cObtenido(respuestageneralestado, respuestageneralmensaje) VALUES("OK","" )
+
+IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+	MESSAGEBOX("Fallo el caso de prueba 11.A", 48,"Atencion")
+	RETURN .F.
+ENDIF
 
 lNombreNodo = "respuestaDetalle"
+
 =oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
+
+CREATE CURSOR cObtenido(respuestadetalleestado)
+
+MODIFY STRUCTURE
 
 
 lNombreNodo = "autorizada"
 =oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
-
 
 ? " Caso 11 con exito "
 
@@ -430,6 +441,8 @@ DEFINE CLASS Conversor AS CUSTOM
 	verbose=.F.
 	DIMENSION acampos[1]
 	
+	coleccionCampos=.NULL.
+	
 	PROCEDURE inicializaratributos()
 			THIS.estoyenarray=.F.
 			THIS.columnacreada=.F.
@@ -439,6 +452,8 @@ DEFINE CLASS Conversor AS CUSTOM
 			THIS.agregoregistro=.F.
 			THIS.nodoBuscado = ""
 			THIS.nodoEncontrado = .NULL.
+			THIS.coleccionCampos=CREATEOBJECT("Collection")
+			
 			* Seteos basicos e importantes!!!!!
 			SET SAFETY OFF
 			SET EXACT ON
@@ -685,17 +700,18 @@ DEFINE CLASS Conversor AS CUSTOM
 
 			IF lIsArray AND THIS.IsObject(cObj)
 				* Aca Tiene un objeto del array
-				IF THIS.estoyenarray AND !THIS.columnacreada THEN
-					THIS.columnacreada=.F.
-				ENDIF
+				*IF THIS.estoyenarray AND !THIS.columnacreada THEN
+				*	THIS.columnacreada=.F.
+				*ENDIF
 
 				LOCAL lNombreCursor
 				lNombreCursor= THIS.nombrecursor
 				SELECT &lNombreCursor.
-
+				
 				* Si hay un registro no toco nada, si no hay registros tengo que agregar
 				IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor) > 0 THEN
 					APPEND BLANK
+					THIS.coleccionCampos=CREATEOBJECT("collection")
 					THIS.agregoregistro=.F.
 				ELSE
 					IF RECCOUNT(THIS.nombrecursor) = 0 THEN
@@ -780,14 +796,18 @@ DEFINE CLASS Conversor AS CUSTOM
 						THIS.estoyenarray=.T.
 						THIS.columnacreada=.F.
 						THIS.nombreprefijo= cProp
+						
 						LOCAL lNombreCursor
 						lNombreCursor= THIS.nombrecursor
 						SELECT &lNombreCursor.
+						
 						GO TOP
+						
 						* Si hay un registro no toco nada
 						uValue = THIS.parse(cValue)
 						THIS.columnacreada=.F.
 						THIS.nombreprefijo=""
+						
 						* No tengo que hacer mas nada luego abajo de salir del array
 						LOOP
 
@@ -799,14 +819,9 @@ DEFINE CLASS Conversor AS CUSTOM
 
 				ENDCASE
 				
-				IF LOWER(ALLTRIM(uValue))="german" THEN
-					SET STEP ON
-				ENDIF
-
 				LOCAL lSentencia, lNombreCursor, lTipoDatoForzado, lNombreColumna, lSufijo
 				
 				lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
-				?lNombrecolumna
 				
 				lTipoDatoForzado= THIS.obtenerTipoDato(lNombrecolumna)
 
@@ -823,7 +838,10 @@ DEFINE CLASS Conversor AS CUSTOM
 				
 					lSufijo = ""
 					
-					IF !THIS.columnacreada THEN
+					LOCAL lExisteColumna
+					lExisteColumna = THIS.existeColumna(lNombreColumna)
+					
+					IF !THIS.columnacreada AND !lExisteColumna THEN
 						lSentencia="ALTER TABLE " + THIS.nombrecursor + " ADD COLUMN " + lNombreColumna + " " + lTipoDato
 						&lSentencia
 					ENDIF
@@ -837,6 +855,7 @@ DEFINE CLASS Conversor AS CUSTOM
 
 					IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor)=0 THEN
 						APPEND BLANK
+						THIS.coleccionCampos=CREATEOBJECT("collection")
 						THIS.agregoregistro=.F.
 					ENDIF
 					
@@ -946,10 +965,8 @@ DEFINE CLASS Conversor AS CUSTOM
 	HIDDEN PROCEDURE obtenerNombreUnicoColumna
 			LPARAMETERS pNombreColumna
 			
-			MESSAGEBOX("BUSCAR EN UNA COLECCION DE COLUMNAS CREADAS Y NO ENLA DEFINICION DEL CURSOR!!")
-			
 			LOCAL ARRAY aCampos[1]
-			LOCAL lNombreColumna, lNombreCursor, lCantidadCampos, lRepeticiones, lIndice, lCampoEncontrado
+			LOCAL lNombreColumna, lNombreCursor, lCantidadCampos, lRepeticiones, columna, lCampoEncontrado
 			
 			lNombreColumna = ALLTRIM(THIS.nombreprefijo) + ALLTRIM(pNombreColumna)
 			
@@ -957,31 +974,67 @@ DEFINE CLASS Conversor AS CUSTOM
 			lNombreCursor = THIS.nombrecursor
 			SELECT &lNombreCursor.
 
-			lCantidadCampos=AFIELDS(aCampos,THIS.nombrecursor)
+			*lCantidadCampos=AFIELDS(aCampos,THIS.nombrecursor)
 			lRepeticiones = 0
 
+*!*				* Si ya se creo la columna siempre va a encontrar la columna con numero mayor creado
+*!*				FOR lIndice=1 TO lCantidadCampos
+*!*					* Tengo que buscar el nombre del campo con las repeticiones que tenga
+*!*					* Si ya se repitio supongo asumo que fue creado con el numero de repeticion en el nombre
+*!*					LOCAL lCampoABuscar
+*!*					lCampoABuscar =  LOWER(ALLTRIM(lNombreColumna) + IIF(lRepeticiones>0, ALLTRIM(STR(lRepeticiones)),""))
+
+*!*					IF lCampoABuscar = LOWER(aCampos[lIndice,1])  THEN
+*!*						lRepeticiones = lRepeticiones + 1
+*!*					ENDIF
+*!*				ENDFOR
+
 			* Si ya se creo la columna siempre va a encontrar la columna con numero mayor creado
-			FOR lIndice=1 TO lCantidadCampos
+			FOR EACH columna IN THIS.coleccionCampos
 				* Tengo que buscar el nombre del campo con las repeticiones que tenga
 				* Si ya se repitio supongo asumo que fue creado con el numero de repeticion en el nombre
 				LOCAL lCampoABuscar
 				lCampoABuscar =  LOWER(ALLTRIM(lNombreColumna) + IIF(lRepeticiones>0, ALLTRIM(STR(lRepeticiones)),""))
 
-				IF lCampoABuscar = LOWER(aCampos[lIndice,1])  THEN
+				IF lCampoABuscar = LOWER(columna)  THEN
 					lRepeticiones = lRepeticiones + 1
 				ENDIF
 			ENDFOR
 
 			* Si estoy en un array no le sumo 1
 			IF lRepeticiones > 0 THEN
-				IF THIS.columnacreada THEN
-					lRepeticiones = lRepeticiones - 1
-				ENDIF
-				RETURN lNombreColumna + IIF(lRepeticiones= 0,"",ALLTRIM(STR(lRepeticiones)))
-			ELSE
-				RETURN lNombreColumna
+				*IF THIS.columnacreada THEN
+					*lRepeticiones = lRepeticiones - 1
+				*ENDIF
+				lNombreColumna = lNombreColumna + IIF(lRepeticiones= 0,"",ALLTRIM(STR(lRepeticiones)))
 			ENDIF
+			
+			THIS.coleccionCampos.ADD(lNombreColumna)
+			
+			RETURN lNombreColumna
 
+	ENDPROC
+	
+	HIDDEN PROCEDURE existeColumna(pNombreColumna)
+			
+			LOCAL ARRAY aCampos[1]
+			LOCAL lNombreCursor, lCantidadCampos, lIndice, lNombreColumna, lCampoABuscar
+			
+			* Tomo el array de la colecion de campos no de la tabla en si
+			lNombreCursor = THIS.nombrecursor
+			SELECT &lNombreCursor.
+
+			lCantidadCampos=AFIELDS(aCampos,THIS.nombrecursor)
+			* Si ya se creo la columna siempre va a encontrar la columna con numero mayor creado
+			FOR lIndice=1 TO lCantidadCampos
+				
+				IF LOWER(ALLTRIM(pNombreColumna)) = LOWER(aCampos[lIndice,1])  THEN
+					RETURN .T.
+				ENDIF
+
+			ENDFOR
+			
+			RETURN .F.
 	ENDPROC
 	
 	HIDDEN PROCEDURE obtenerTipoDato(pNombreCampo)
