@@ -20,429 +20,467 @@ LOCAL oConversor
 
 oConversor=CREATEOBJECT("Conversor")
 
-********************************************* Caso 1 - Object con valores simples
-#DEFINE CASO1 1
-pcJSON='{"nombre":"German","apellido":"muñoz"}'
+*!*	********************************************* Caso 1 - Object con valores simples
+*!*	#DEFINE CASO1 1
+*!*	pcJSON='{"nombre":"German","apellido":"muñoz"}'
 
-=oConversor.jsonACursor(pcjson )
+*!*	=oConversor.jsonACursor(pcjson )
 
-CREATE CURSOR cObtenido(nombre C(100),apellido C(100))
-INSERT INTO cObtenido(nombre,apellido) VALUES(PADR("German",100," "),PADR("muñoz",100," "))
+*!*	CREATE CURSOR cObtenido(nombre C(100),apellido C(100))
+*!*	INSERT INTO cObtenido(nombre,apellido) VALUES(PADR("German",100," "),PADR("muñoz",100," "))
 
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 1", 48,"Atencion")
-	RETURN .F.
-ENDIF
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 1", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
 
-? " Caso 1 con exito "
+*!*	? " Caso 1 con exito "
 
-******************************************** Caso de prueba 2 - Un object que contiene un atributo object
-#DEFINE CASO2 2
+*!*	******************************************** Caso de prueba 2 - Un object que contiene un atributo object
+*!*	#DEFINE CASO2 2
 
-pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
+*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
 
-=oConversor.jsonACursor(pcJSON)
+*!*	=oConversor.jsonACursor(pcJSON)
 
-CREATE CURSOR cObtenido(nombre C(100) , apellido Character(100), telefonodescripcion Character(100), telefononumero Numeric(10))
-INSERT INTO cObtenido(nombre, apellido, telefonodescripcion, telefononumero);
-VALUES(PADR("German",100," "), PADR("muñoz",100," "), PADR("Casa",100," "),123)
+*!*	CREATE CURSOR cObtenido(nombre C(100) , apellido Character(100), telefonodescripcion Character(100), telefononumero Numeric(10))
+*!*	INSERT INTO cObtenido(nombre, apellido, telefonodescripcion, telefononumero);
+*!*	VALUES(PADR("German",100," "), PADR("muñoz",100," "), PADR("Casa",100," "),123)
 
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 2", 48,"Atencion")
-	RETURN .F.
-ENDIF
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 2", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
 
-? " Caso 2 con exito "
+*!*	? " Caso 2 con exito "
 
-********************************************* Caso de prueba 3 - Un object que contiene un object, que contiene un object
-#DEFINE CASO3 3
+*!*	********************************************* Caso de prueba 3 - Un object que contiene un object, que contiene un object
+*!*	#DEFINE CASO3 3
 
-pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
-=oConversor.jsonACursor(pcJSON)
+*!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","Detalle":{"caracteristica":"314","numero":"123456"}}}'
+*!*	=oConversor.jsonACursor(pcJSON)
 
 
-CREATE CURSOR cObtenido(nombre C(100) , apellido C(100), telefonodescripcion C(100), detallecaracteristica C(100),  detallenumero C(100))
-INSERT INTO cObtenido(nombre, apellido, telefonodescripcion, detallecaracteristica, detallenumero );
-	VALUES(PADR("German",100," "), PADR("muñoz",100," "), PADR("Casa",100," "), PADR("314",100," "), PADR("123456",100," "))
+*!*	CREATE CURSOR cObtenido(nombre C(100) , apellido C(100), telefonodescripcion C(100), detallecaracteristica C(100),  detallenumero C(100))
+*!*	INSERT INTO cObtenido(nombre, apellido, telefonodescripcion, detallecaracteristica, detallenumero );
+*!*		VALUES(PADR("German",100," "), PADR("muñoz",100," "), PADR("Casa",100," "), PADR("314",100," "), PADR("123456",100," "))
 
-	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 3", 48,"Atencion")
-	RETURN .F.
-ENDIF
+*!*		IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 3", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
 
-? " Caso 3 con exito "
+*!*	? " Caso 3 con exito "
 
-******************************************** Caso 4 - Object grande - con anidaciones de objects
-#DEFINE CASO4 4
+*!*	******************************************** Caso 4 - Object grande - con anidaciones de objects
+*!*	#DEFINE CASO4 4
 
-pcjson= '{"respuestaComunicacion":{"idTransaccion":316,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
-		'"respuestaElegibilidadAfiliado":{"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""},"detalleElegibilidadAfiliado":{'+;
-		'"afiliado":{"ID":"32165478","nombre":"PEREZ JUAN","convenio":{"ID":1,"nombre":"IAPOS"},"plan":{"ID":1,"nombre":"Dpto ROSARIO"}},'+;
-		'"modoIngresoAfiliado":"M","observaciones":""}}}'
+*!*	pcjson= '{"respuestaComunicacion":{"idTransaccion":316,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
+*!*			'"respuestaElegibilidadAfiliado":{"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""},"detalleElegibilidadAfiliado":{'+;
+*!*			'"afiliado":{"ID":"32165478","nombre":"PEREZ JUAN","convenio":{"ID":1,"nombre":"IAPOS"},"plan":{"ID":1,"nombre":"Dpto ROSARIO"}},'+;
+*!*			'"modoIngresoAfiliado":"M","observaciones":""}}}'
 
-=oConversor.jsonACursor(pcJSON)
+*!*	=oConversor.jsonACursor(pcJSON)
 
-CREATE CURSOR cObtenido(;
-respuestacomunicacionidtransaccion N(10),respuestabasetiposrespuestavalidacion C(100), respuestabasemensaje C(100),;
-estadogeneraltiposrespuestavalidacion C(100),estadogeneralmensaje C(100),afiliadoid C(100),afiliadonombre C(100),convenioid N(10),convenionombre C(100),planid N(10),;
-plannombre C(100),modoingresoafiliado C(100),observaciones C(100));
+*!*	CREATE CURSOR cObtenido(;
+*!*	respuestacomunicacionidtransaccion N(10),respuestabasetiposrespuestavalidacion C(100), respuestabasemensaje C(100),;
+*!*	estadogeneraltiposrespuestavalidacion C(100),estadogeneralmensaje C(100),afiliadoid C(100),afiliadonombre C(100),convenioid N(10),convenionombre C(100),planid N(10),;
+*!*	plannombre C(100),modoingresoafiliado C(100),observaciones C(100));
 
-INSERT INTO cObtenido(respuestacomunicacionidtransaccion,respuestabasetiposrespuestavalidacion, respuestabasemensaje,;
-estadogeneraltiposrespuestavalidacion,estadogeneralmensaje,afiliadoid, afiliadonombre,convenioid,convenionombre,planid,;
-plannombre, modoingresoafiliado, observaciones);
-VALUES( 316, PADR("OK", 100, " "), PADR(" ",100," "),PADR("OK",100," "), PADR(" ",100," "), PADR("32165478",100," "),PADR("PEREZ JUAN",100," "),;
-1,PADR("IAPOS",100," "),1, PADR("Dpto ROSARIO",100," "), PADR("M",100," ") ,PADR(" ",100," "))
+*!*	INSERT INTO cObtenido(respuestacomunicacionidtransaccion,respuestabasetiposrespuestavalidacion, respuestabasemensaje,;
+*!*	estadogeneraltiposrespuestavalidacion,estadogeneralmensaje,afiliadoid, afiliadonombre,convenioid,convenionombre,planid,;
+*!*	plannombre, modoingresoafiliado, observaciones);
+*!*	VALUES( 316, PADR("OK", 100, " "), PADR(" ",100," "),PADR("OK",100," "), PADR(" ",100," "), PADR("32165478",100," "),PADR("PEREZ JUAN",100," "),;
+*!*	1,PADR("IAPOS",100," "),1, PADR("Dpto ROSARIO",100," "), PADR("M",100," ") ,PADR(" ",100," "))
 
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 4", 48,"Atencion")
-	RETURN .F.
-ENDIF
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 4", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
 
-	? " Caso 4 con exito "
+*!*		? " Caso 4 con exito "
+
+
+*!*	******************************************** Caso 5 - Un array de object con atributos simples
+*!*	#DEFINE CASO5 5
+
+*!*	pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
+
+*!*	=oConversor.jsonACursor(pcJSON)
+
+*!*	CREATE CURSOR cObtenido(profesionesid N(10))
+*!*	INSERT INTO cObtenido(profesionesid) VALUES(1)
+*!*	INSERT INTO cObtenido(profesionesid) VALUES(2)
+*!*	INSERT INTO cObtenido(profesionesid) VALUES(3)
+
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 5", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
+
+*!*	? " Caso 5 con exito "
+
+*!*	******************************************** Caso 6 - Un array elementos objects
+*!*	#DEFINE CASO6 6
+
+*!*	pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+
+*!*	=oConversor.jsonACursor(pcJSON)
+
+*!*	CREATE CURSOR cObtenido(profesionesid N(10), profesionesnombre C(100))
+*!*	INSERT INTO cObtenido(profesionesid, profesionesnombre) VALUES(1,PADR("MEDICO",100," "))
+*!*	INSERT INTO cObtenido(profesionesid, profesionesnombre) VALUES(2,PADR("FONOAUDIOLOGO",100," "))
+*!*	INSERT INTO cObtenido(profesionesid, profesionesnombre) VALUES(3,PADR("KINESIOLOGO",100," "))
+
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 6", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
+
+*!*	? " Caso 6 con exito "
+
+*!*	******************************************** Caso 7 - Object con un Array de object
+*!*	#DEFINE CASO7 7
+
+
+*!*	pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
+*!*			'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
+
+*!*	=oConversor.jsonACursor(pcJSON)
+
+*!*	CREATE CURSOR cObtenido(;
+*!*	respuestacomunicacionidtransaccion N(10),respuestabasetiposrespuestavalidacion C(100), respuestabasemensaje C(100),;
+*!*	profesionesid N(10),profesionesnombre C(100) );
+
+*!*	INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
+*!*		VALUES( 15984, PADR("OK",100," "), PADR(" ",100," "), 1, PADR("MEDICO",100," ") )
+*!*	INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
+*!*		VALUES( 0, PADR(" ",100," "), PADR(" ",100," "), 2, PADR("FONOAUDIOLOGO",100," ") )
+*!*	INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
+*!*		VALUES( 0, PADR(" ",100," "), PADR(" ",100," "), 3, PADR("KINESIOLOGO",100," ") )
+
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 7", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
+
+
+*!*	? " Caso 7 con exito "
+
+*!*	******************************************** Caso 8 - Array con entidades objects anidadas
+*!*	#DEFINE CASO8 8
+
+*!*	pcJson='{"rechazadas": ['+;
+*!*	'{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "00000001234567","nombre": "COSME FULANITO","convenio": {"ID": 2,'+;
+*!*	'"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
+*!*	'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
+*!*	'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 19999,"libro": "     ","folio": "     "},"nombre": "ATILIO"},'+;
+*!*	'"fechaPrestacion": "2014/09/25"},'+;
+*!*	'"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "669464","ID": "669464","Nombre": "TIROGLOBULINA - líquido de punción (TG LP)"'+;
+*!*	'},"cantidad": 1},"delegacion": {"ID": 1,"nombre": "Dpto ROSARIO"},"modoIngresoAfiliado": "M","sid": "31739","evaluacionSolicitudCompleta": {'+;
+*!*	'"evaluacionSolicitud": {"respuestaBase": {"tiposRespuestaValidacion": "NOAUTORIZA","mensaje": ""},'+;
+*!*	'"observaciones": ""},"leyenda": "La prestación NO PUEDE SER AUTORIZADA por el sistema,por favor diríjase a la delegación más cercana para consultar"'+;
+*!*	'}},'+;
+*!*	'{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "123456","nombre": "ESTE NO ES COSME ","convenio": {"ID": 2,'+;
+*!*	'"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
+*!*	'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
+*!*	'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 19999,"libro": "     ","folio": "     "},"nombre": "ATILIO"},'+;
+*!*	'"fechaPrestacion": "2014/09/25"},'+;
+*!*	'"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "669464","ID": "669464","Nombre": "TIROGLOBULINA - líquido de punción (TG LP)"'+;
+*!*	'},"cantidad": 1},"delegacion": {"ID": 1,"nombre": "Dpto ROSARIO"},"modoIngresoAfiliado": "M","sid": "31739","evaluacionSolicitudCompleta": {'+;
+*!*	'"evaluacionSolicitud": {"respuestaBase": {"tiposRespuestaValidacion": "NOAUTORIZA","mensaje": ""},'+;
+*!*	'"observaciones": ""},"leyenda": "La prestación NO PUEDE SER AUTORIZADA por el sistema,por favor diríjase a la delegación más cercana para consultar"'+;
+*!*	'}}]'+;
+*!*	'}'
+
+*!*	=oConversor.jsonACursor(pcJson)
+
+*!*	? " Caso 8 con exito  - HACER EQUALS CURSOR"
+
+*!*	******************************************** Caso 9 - Object con array de objectos anidados, con casteo de atributos
+*!*	#DEFINE CASO9 9
+
+*!*	pcJson='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
+*!*		'"convenio": {"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 52,"nombre": "2000/01 - Exento"}},"prestador": {"codigoProfesion": 4,'+;
+*!*		'"matricula": 64758,"libro": "     ","folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ",'+;
+*!*		'"folio": "     "},"nombre": "DR CHAPATIN"},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ","folio": "     "'+;
+*!*		'},"nombre": "DR CHAPATIN"},"fechaPrestacion": "2014/08/21"}'+;
+*!*		',"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420101","ID": "420101",'+;
+*!*		'"Nombre": "CONSULTA EN CONSULTORIO."},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0,'+;
+*!*		'"coseguroIva": 0,"coseguroPorcentaje": 0,"honorarios": 0,"derechos": 0,"iva": 0,"coseguroTexto": "Sin Cargo"}}],"fechaAutorizacion": "2014/08/21"}'
+
+
+*!*	DIMENSION aTiposDatos[2]
+*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+*!*	aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
+
+*!*	=oConversor.jsonACursor(pcJson, .F., @aTiposDatos)
+
+*!*	? " Caso 9 con exito - HACER EQUALS CURSOR"
+
+*!*	******************************************** Caso 10 - Entidad con varios niveles de anidamiento pero solo tomo un nodo, con casteo de atributos
+*!*		* Indico el nodo de donde cortar, un solo nivel
+*!*	#DEFINE CASO10 10
+
+*!*	pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
+*!*	'}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
+*!*	'"nombre": "GONZALEZ ROXANA L","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": { "ID": 1,"nombre": "Dpto ROSARIO"'+;
+*!*	'}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,'+;
+*!*	'"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {'+;
+*!*	'"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+*!*	'}}],"fechaAutorizacion": "2014/07/01"},{"baseAmbulatorio": {"ID": "A02-R34-S19","afiliado": {"ID": "000000028148440","nombre": "PEDRIEL WALTER SEBAS",'+;
+*!*	'"convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,'+;
+*!*	'"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+*!*	'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
+*!*	'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
+*!*	'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
+*!*	'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
+*!*	'}}],"fechaAutorizacion": "2014/07/01"}]}'
+
+*!*	lNombreNodo = "autorizadas"
+
+*!*	DIMENSION aTiposDatos[1]
+*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+
+*!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos)
+
+*!*	? " Caso 10 con exito  - HACER EQUALS CURSOR"
+
+*!*	******************************************** Caso 11, solo tomo valores de atributos de una entidad grande
+*!*	#DEFINE CASO11 11
+
+*!*	* Con dos niveles de anidamiento, obtengo cursor de un nodo!!
+*!*	pcjson=	'{"respuestaGeneral":{"estado":"OK","mensaje":""},"detalle":{"respuestaDetalle":{"estado":"ERROR","mensaje":""},'+;
+*!*			'"auditorias":[],"rechazadas":[],"autorizada":{"codigoAutorizacion":"123456"}}}'
+
+*!*	DIMENSION aTiposDatos[1]
+*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
+
+*!*	lNombreNodo = "respuestaGeneral"
+*!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
+
+*!*	CREATE CURSOR cObtenido(respuestageneralestado C(100), respuestageneralmensaje C(100))
+*!*	INSERT INTO cObtenido(respuestageneralestado, respuestageneralmensaje) VALUES("OK","" )
+
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 11.A", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
+
+*!*	lNombreNodo = "respuestaDetalle"
+
+*!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
+
+*!*	CREATE CURSOR cObtenido(respuestadetalleestado C(100), respuestadetallemensaje C(100))
+*!*	INSERT INTO cObtenido(respuestadetalleestado, respuestadetallemensaje) values("ERROR","")
+
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 11.B", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
+
+*!*	lNombreNodo = "autorizada"
+*!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
+
+*!*	CREATE CURSOR cObtenido(autorizadacodigoautorizacion C(100))
+*!*	INSERT INTO cObtenido(autorizadacodigoautorizacion) VALUES (PADR("123456",100," "))
+
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 11.C", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
+
+*!*	? " Caso 11 con exito "
+
+*!*	*********************************** Caso 12 - Solo tomo el valor de un atributo, que es un array de valores simples
+*!*	#DEFINE CASO12 12
+
+*!*	pcJson= '{'+;
+*!*	'"efector":{"codigoProfesion":1,"matricula":987,"libro":"     ","folio":"     "},'+;
+*!*	'"prescriptor":{"codigoProfesion":1,"matricula":987,"libro":"     ","folio":"     "},'+;
+*!*	'"fechaPrestacion":"18/03/2014",'+;
+*!*	'"codigoAfiliado":"3215487",'+;
+*!*	'"codigoConvenio":1,'+;
+*!*	'"codigoDelegacion":1,'+;
+*!*	'"codigoMedioDePago":0,'+;
+*!*	'"diagnostico":"",'+;
+*!*	'"prestacionSolicitadas":'+;
+*!*	'[{"codigoPrestacion":"999999","cantidad":1,"urgencia":false,"motivoSolicitud":"AGUDO","observaciones":"","bono":"321"}]}'
+
+*!*	lNombreNodo = "prestacionSolicitadas"
+*!*	DIMENSION aTiposDatos[1]
+*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","codigoAfiliado","C(15)")
+
+*!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
+
+*!*	? " Caso 12 con exito  - HACER EQUALS CURSOR"
+
+*!*	******************************************** Caso 13, solo tomo el valor de un atributo, que un array de objects
+
+*!*	#DEFINE CASO13 13
+
+*!*	pcJson= '{"respuestaComunicacion": {"idTransaccion": 17525,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""}},"auditorias": [{'+;
+*!*	'"baseAmbulatorio": {"ID": 1128832,"afiliado": {"ID": "000000018107469","nombre": "PIZZIO NESTOR DANIEL","convenio": {"ID": 2,"nombre": "AMR Salud"'+;
+*!*	'},"plan": {"ID": 139,"nombre": "PLAN NOVO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": "     ","folio": "     "},'+;
+*!*	'"efector": {"ID": {"codigoProfesion": 1,"matricula": 18765,"libro": "     ","folio": "     "},"nombre": "ABRAHAM MARCELO ELIAS"},"prescriptor": {'+;
+*!*	'"ID": {"codigoProfesion": 1,"matricula": 13442,"libro": "     ","folio": "     "},"nombre": "MATELLICANI GUSTAVO ANDRES"},"fechaPrestacion": "2014/10/15"'+;
+*!*	'},"prestacionRealizada": {"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "170101","ID": "170101","Nombre": "ELECTROCARDIOGRAMA EN CONSULTORIO"'+;
+*!*	'},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,'+;
+*!*	'"derechos": 0.00,"iva": 0.00,"coseguroTexto": "Sin Cargo "}},"estadoAuditoria": "RECHAZADO","comentarioAuditor": "AUTORIZADO E 29/09/2014\rESTEFANIA -ATENCION TELEFONICA",'+;
+*!*	'"fechaAutorizacion": "2014/10/15"},{"baseAmbulatorio": {"ID": 1163230,"afiliado": {"ID": "000000043491224","nombre": "GUERRA FLORENCIA LILIANA","convenio": {'+;
+*!*	'"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": "     ","folio": "     "},'+;
+*!*	'"efector": {"ID": {"codigoProfesion": 1,"matricula": 17223,"libro": "     ","folio": "     "},"nombre": "ALBORNOZ SILVANA ANGELINA"},"prescriptor": {"ID": {"codigoProfesion": 1,'+;
+*!*	'"matricula": 17223,"libro": "     ","folio": "     "},"nombre": "ALBORNOZ SILVANA ANGELINA"},"fechaPrestacion": "2014/11/13"},"prestacionRealizada": {"prestacionSolicitadaBase": {'+;
+*!*	'"nomencladorBase": {"codigoNomenclador": "300119","ID": "300119","Nombre": "OFTALMOSCOPIA INDIRECTA BINOCULAR CON ESQUEMA DE FONDO DE OJO."},"cantidad": 1},"importePrestacion": {'+;
+*!*	'"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "Sin Cargo "'+;
+*!*	'}},"estadoAuditoria": "APROBADO","comentarioAuditor": "\rESTEFANIA -ATENCION TELEFONICA","fechaAutorizacion": "2014/11/13"}]}'
+
+*!*	lNombreNodo = "auditorias"
+*!*	DIMENSION aTiposDatos[1]
+*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","Baseambulatorioid","N(12)")
+
+*!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
+
+*!*	? " Caso 13 con exito  - HACER EQUALS CURSOR"
+
+*!*	*****************************************  Caso 14 -
+
+*!*	#DEFINE CASO14
+
+*!*	pcJson = '{"transaccionPrevia":{"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""},"estadoExtra":{"tiposRespuestaValidacion":"OK","mensaje":""}},"transaccionFinalizar":{'+;
+*!*		'"transaccionAutoriza":{"respuestaBase":{"tiposRespuestaValidacion":"APROBADA","mensaje":""},"codigoAutorizacion":"A02-Y38-X30"},'+;
+*!*		'"autorizada":{"baseAmbulatorio":{"ID":"A02-Y38-X30","afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ",'+;
+*!*		'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU"},"plan":{"ID":2,"nombre":"PLAN 2"}},"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
+*!*		'"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
+*!*		'"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
+*!*		'"fechaPrestacion":"2015/01/26"},"prestacionesRealizadas":[{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"420101","ID":"420101","Nombre":"CONSULTA EN CONSULTORIO."},'+;
+*!*		'"cantidad":1},"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,"iva":0.00,'+;
+*!*		'"coseguroTexto":"Sin Cargo"}}],"fechaAutorizacion":1422241200000,"prestadorOriginal":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "}},'+;
+*!*		'"auditorias":[],"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""}}'
+
+*!*	DIMENSION aTiposDatosAutorizada[12]
+
+*!*	lNombreAtributo = "autorizada"
+
+*!*	aTiposDatosAutorizada[1]=CREATEOBJECT("TipoDato","nomencladorbaseid","C(6)")
+*!*	aTiposDatosAutorizada[2]=CREATEOBJECT("TipoDato","cantidad","N(4)")
+*!*	aTiposDatosAutorizada[3]=CREATEOBJECT("TipoDato","cosegurotexto","C(30)")
+*!*	aTiposDatosAutorizada[4]=CREATEOBJECT("TipoDato","coseguro","N(12,2)")
+*!*	aTiposDatosAutorizada[5]=CREATEOBJECT("TipoDato","prestadorcodigoprofesion","N(2)")
+*!*	aTiposDatosAutorizada[6]=CREATEOBJECT("TipoDato","prestadormatricula","N(8)")
+*!*	aTiposDatosAutorizada[7]=CREATEOBJECT("TipoDato","prestadorlibro","C(5)")
+*!*	aTiposDatosAutorizada[8]=CREATEOBJECT("TipoDato","prestadorfolio","C(5)")
+*!*	aTiposDatosAutorizada[9]=CREATEOBJECT("TipoDato","codigoAutorizacion","C(11)")
+*!*	aTiposDatosAutorizada[10]=CREATEOBJECT("TipoDato","plannombre","C(60)")
+*!*	aTiposDatosAutorizada[11]=CREATEOBJECT("TipoDato","fechaAutorizacion","N(15)")
+*!*	aTiposDatosAutorizada[12]=CREATEOBJECT("TipoDato","baseambulatorioid","C(11)")		
+
+*!*	=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatosAutorizada )
+
+*!*	? " Caso 14 con exito  - HACER EQUALS CURSOR"
+
+*!*	*******************************************************  Caso 15 - Arra y con dos entidades object, tomo el valor de una tributo
+*!*	#DEFINE CASO15 15
+
+*!*	pcJson='{"transaccionPrevia":{"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""},"estadoExtra":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
+*!*	'"transaccionFinalizar":{"transaccionAutoriza":{"respuestaBase":{"tiposRespuestaValidacion":"AUDMED","mensaje":""},"codigoAutorizacion":"A02-Y38-Y20"},'+;
+*!*	'"autorizada":null,"auditorias":['+;
+*!*	'{"baseAmbulatorio":{"ID":1173785,"afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ                             ",'+;
+*!*	'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU                "},"plan":{"ID":2,"nombre":"PLAN 2                             "}},'+;
+*!*	'"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
+*!*	'"nombre":"MUNIOZ ERNESTO EMILIO"},"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
+*!*	'"fechaPrestacion":"2015/01/27"},"prestacionRealizada":{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"150101","ID":"150101",'+;
+*!*	'"Nombre":"BIOPSIA POR INCISION O POR PUNCION. (GANGLIO, LESION DE PIEL, TROZO DE OVARIO, CILINDRO DE HIGADO,  "},"cantidad":1},'+;
+*!*	'"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,'+;
+*!*	'"iva":0.00,"coseguroTexto":"Sin Cargo                     "}},"estadoAuditoria":"PENDIENTE","comentarioAuditor":"","fechaAutorizacion":1422371040734},'+;
+*!*	'{"baseAmbulatorio":{"ID":1173786,"afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ                             ",'+;
+*!*	'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU                "},"plan":{"ID":2,"nombre":"PLAN 2                             "}},'+;
+*!*	'"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
+*!*	'"nombre":"MUNIOZ ERNESTO EMILIO"},"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
+*!*	'"fechaPrestacion":"2015/01/27"},"prestacionRealizada":{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"150601","ID":"150601",'+;
+*!*	'"Nombre":"BIOPSIA POR INCISION O POR PUNCION. (GANGLIO, LESION DE PIEL, TROZO DE OVARIO, CILINDRO DE HIGADO,  "},"cantidad":1},'+;
+*!*	'"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,'+;
+*!*	'"iva":0.00,"coseguroTexto":"Sin Cargo                     "}},"estadoAuditoria":"PENDIENTE","comentarioAuditor":"","fechaAutorizacion":1422371040734}'+;
+*!*	'],'+;
+*!*	'"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""}}'
+
+*!*	lNombreAtributo = "auditorias"
+
+*!*	DIMENSION aTiposDatos[6]
+
+*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","nomencladorbaseid","C(6)")
+*!*	aTiposDatos[2]=CREATEOBJECT("TipoDato","cantidad","N(4)")
+*!*	aTiposDatos[3]=CREATEOBJECT("TipoDato","cosegurotexto","C(30)")
+*!*	aTiposDatos[4]=CREATEOBJECT("TipoDato","coseguro","N(12,2)")
+*!*	aTiposDatos[5]=CREATEOBJECT("TipoDato","fechaAutorizacion","N(15)")
+*!*	aTiposDatos[6]=CREATEOBJECT("TipoDato","baseambulatorioid","N(12)")
+
+*!*	=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatos )
+
+*!*	? "Exito Caso de prueba 15 - HACER EQUALS CURSOR"
+
+
+*!*	********************** Caso 16 - Columnas con nombres repetidos, array con objetos de entidades con atributos de nombres iguales
+*!*	#DEFINE CASO16 16
+
+*!*	pcJson='{"lista":[{"efector":{ "id":{"nombre":"german"} },"prescriptor": { "id":{"nombre": "fabricio"}}},'+;
+*!*					'{"efector":{"id":{"nombre":"marcos"}},"prescriptor": { "id":{"nombre": "matias"}}}]}'
+
+*!*	DIMENSION aTiposDatos[1]
+
+*!*	lNombreAtributo = .F.
+
+*!*	=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatos )
+
+*!*	CREATE CURSOR cObtenido(idnombre C(100), idnombre1 C(100))
+*!*	INSERT INTO cObtenido(idnombre, idnombre1) VALUES(PADR("german",100," "),PADR("fabricio",100," "))
+*!*	INSERT INTO cObtenido(idnombre, idnombre1) VALUES(PADR("marcos",100," "),PADR("matias",100," "))
+
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*		MESSAGEBOX("Fallo el caso de prueba 16", 48,"Atencion")
+*!*		RETURN .F.
+*!*	ENDIF
 
 
 ******************************************** Caso 5 - Un array de object con atributos simples
-#DEFINE CASO5 5
+#DEFINE CASO17 17
 
-pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
+LOCAL i
+pcjson= '{"profesiones":['
 
+FOR i = 1 TO 10000
+	pcjson = pcjson + '{"ID":'+ALLTRIM(STR(i)) + '}' + IIF(I=10000,'',',')
+ENDFOR
+pcjson = pcjson + ']}'
+
+CREATE CURSOR vamosaver(campo memo)
+INSERT INTO vamosaver(campo) VALUES(pcjson)
+BROWSE
+
+lInicio = DATETIME()
+?lInicio
 =oConversor.jsonACursor(pcJSON)
 
+lFinal = DATETIME()
+?lFinal
+? "Duracion"
+? lFinal - lInicio
+
 CREATE CURSOR cObtenido(profesionesid N(10))
-INSERT INTO cObtenido(profesionesid) VALUES(1)
-INSERT INTO cObtenido(profesionesid) VALUES(2)
-INSERT INTO cObtenido(profesionesid) VALUES(3)
+FOR i = 1 TO 10000
+	INSERT INTO cObtenido(profesionesid) VALUES(I)
+ENDFOR
 
 IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 5", 48,"Atencion")
+	MESSAGEBOX("Fallo el caso de prueba 17", 48,"Atencion")
 	RETURN .F.
 ENDIF
 
 ? " Caso 5 con exito "
 
-******************************************** Caso 6 - Un array elementos objects
-#DEFINE CASO6 6
-
-pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-
-=oConversor.jsonACursor(pcJSON)
-
-CREATE CURSOR cObtenido(profesionesid N(10), profesionesnombre C(100))
-INSERT INTO cObtenido(profesionesid, profesionesnombre) VALUES(1,PADR("MEDICO",100," "))
-INSERT INTO cObtenido(profesionesid, profesionesnombre) VALUES(2,PADR("FONOAUDIOLOGO",100," "))
-INSERT INTO cObtenido(profesionesid, profesionesnombre) VALUES(3,PADR("KINESIOLOGO",100," "))
-
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 6", 48,"Atencion")
-	RETURN .F.
-ENDIF
-
-? " Caso 6 con exito "
-
-******************************************** Caso 7 - Object con un Array de object
-#DEFINE CASO7 7
-
-
-pcjson='{"respuestaComunicacion":{"idTransaccion":15984,"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
-		'"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-
-=oConversor.jsonACursor(pcJSON)
-
-CREATE CURSOR cObtenido(;
-respuestacomunicacionidtransaccion N(10),respuestabasetiposrespuestavalidacion C(100), respuestabasemensaje C(100),;
-profesionesid N(10),profesionesnombre C(100) );
-
-INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
-	VALUES( 15984, PADR("OK",100," "), PADR(" ",100," "), 1, PADR("MEDICO",100," ") )
-INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
-	VALUES( 0, PADR(" ",100," "), PADR(" ",100," "), 2, PADR("FONOAUDIOLOGO",100," ") )
-INSERT INTO cObtenido(respuestaComunicacionidTransaccion, respuestaBasetiposRespuestaValidacion, respuestaBasemensaje,profesionesid, profesionesnombre);
-	VALUES( 0, PADR(" ",100," "), PADR(" ",100," "), 3, PADR("KINESIOLOGO",100," ") )
-
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 7", 48,"Atencion")
-	RETURN .F.
-ENDIF
-
-
-? " Caso 7 con exito "
-
-******************************************** Caso 8 - Array con entidades objects anidadas
-#DEFINE CASO8 8
-
-pcJson='{"rechazadas": ['+;
-'{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "00000001234567","nombre": "COSME FULANITO","convenio": {"ID": 2,'+;
-'"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
-'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
-'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 19999,"libro": "     ","folio": "     "},"nombre": "ATILIO"},'+;
-'"fechaPrestacion": "2014/09/25"},'+;
-'"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "669464","ID": "669464","Nombre": "TIROGLOBULINA - líquido de punción (TG LP)"'+;
-'},"cantidad": 1},"delegacion": {"ID": 1,"nombre": "Dpto ROSARIO"},"modoIngresoAfiliado": "M","sid": "31739","evaluacionSolicitudCompleta": {'+;
-'"evaluacionSolicitud": {"respuestaBase": {"tiposRespuestaValidacion": "NOAUTORIZA","mensaje": ""},'+;
-'"observaciones": ""},"leyenda": "La prestación NO PUEDE SER AUTORIZADA por el sistema,por favor diríjase a la delegación más cercana para consultar"'+;
-'}},'+;
-'{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "123456","nombre": "ESTE NO ES COSME ","convenio": {"ID": 2,'+;
-'"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
-'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
-'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 19999,"libro": "     ","folio": "     "},"nombre": "ATILIO"},'+;
-'"fechaPrestacion": "2014/09/25"},'+;
-'"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "669464","ID": "669464","Nombre": "TIROGLOBULINA - líquido de punción (TG LP)"'+;
-'},"cantidad": 1},"delegacion": {"ID": 1,"nombre": "Dpto ROSARIO"},"modoIngresoAfiliado": "M","sid": "31739","evaluacionSolicitudCompleta": {'+;
-'"evaluacionSolicitud": {"respuestaBase": {"tiposRespuestaValidacion": "NOAUTORIZA","mensaje": ""},'+;
-'"observaciones": ""},"leyenda": "La prestación NO PUEDE SER AUTORIZADA por el sistema,por favor diríjase a la delegación más cercana para consultar"'+;
-'}}]'+;
-'}'
-
-=oConversor.jsonACursor(pcJson)
-
-? " Caso 8 con exito  - HACER EQUALS CURSOR"
-
-******************************************** Caso 9 - Object con array de objectos anidados, con casteo de atributos
-#DEFINE CASO9 9
-
-pcJson='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
-	'"convenio": {"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 52,"nombre": "2000/01 - Exento"}},"prestador": {"codigoProfesion": 4,'+;
-	'"matricula": 64758,"libro": "     ","folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ",'+;
-	'"folio": "     "},"nombre": "DR CHAPATIN"},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ","folio": "     "'+;
-	'},"nombre": "DR CHAPATIN"},"fechaPrestacion": "2014/08/21"}'+;
-	',"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420101","ID": "420101",'+;
-	'"Nombre": "CONSULTA EN CONSULTORIO."},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0,'+;
-	'"coseguroIva": 0,"coseguroPorcentaje": 0,"honorarios": 0,"derechos": 0,"iva": 0,"coseguroTexto": "Sin Cargo"}}],"fechaAutorizacion": "2014/08/21"}'
-
-
-DIMENSION aTiposDatos[2]
-aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
-aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
-
-=oConversor.jsonACursor(pcJson, .F., @aTiposDatos)
-
-? " Caso 9 con exito - HACER EQUALS CURSOR"
-
-******************************************** Caso 10 - Entidad con varios niveles de anidamiento pero solo tomo un nodo, con casteo de atributos
-	* Indico el nodo de donde cortar, un solo nivel
-#DEFINE CASO10 10
-
-pcjson='{ "respuestaComunicacion": {"idTransaccion": 17147,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""'+;
-'}},"autorizadas": [{"baseAmbulatorio": {"ID": "A02-R34-R85","afiliado": {"ID": "000000038132293",'+;
-'"nombre": "GONZALEZ ROXANA L","convenio": {"ID": 1,"nombre": "IAPOS"},"plan": { "ID": 1,"nombre": "Dpto ROSARIO"'+;
-'}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,'+;
-'"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},"prescriptor": {'+;
-'"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
-'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
-'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
-'}}],"fechaAutorizacion": "2014/07/01"},{"baseAmbulatorio": {"ID": "A02-R34-S19","afiliado": {"ID": "000000028148440","nombre": "PEDRIEL WALTER SEBAS",'+;
-'"convenio": {"ID": 1,"nombre": "IAPOS"},"plan": {"ID": 1,"nombre": "Dpto ROSARIO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,'+;
-'"libro": " ","folio": " "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-'"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 1,"libro": " ","folio": " "},"nombre": "MEDICO OTRA CIRCUNSCRIPCION / GUARDIA"},'+;
-'"fechaPrestacion": "2014/07/01"},"prestacionesRealizadas": [{"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "420601",'+;
-'"ID": "420601","Nombre": "CONSULTA GUARDIA MEDICA"},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 5,"nombre": "Ordenes Consultas"},'+;
-'"coseguro": 1.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "1 Orden Consulta"'+;
-'}}],"fechaAutorizacion": "2014/07/01"}]}'
-
-lNombreNodo = "autorizadas"
-
-DIMENSION aTiposDatos[1]
-aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
-
-=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos)
-
-? " Caso 10 con exito  - HACER EQUALS CURSOR"
-
-******************************************** Caso 11, solo tomo valores de atributos de una entidad grande
-#DEFINE CASO11 11
-
-* Con dos niveles de anidamiento, obtengo cursor de un nodo!!
-pcjson=	'{"respuestaGeneral":{"estado":"OK","mensaje":""},"detalle":{"respuestaDetalle":{"estado":"ERROR","mensaje":""},'+;
-		'"auditorias":[],"rechazadas":[],"autorizada":{"codigoAutorizacion":"123456"}}}'
-
-DIMENSION aTiposDatos[1]
-aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
-
-lNombreNodo = "respuestaGeneral"
-=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
-
-CREATE CURSOR cObtenido(respuestageneralestado C(100), respuestageneralmensaje C(100))
-INSERT INTO cObtenido(respuestageneralestado, respuestageneralmensaje) VALUES("OK","" )
-
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 11.A", 48,"Atencion")
-	RETURN .F.
-ENDIF
-
-lNombreNodo = "respuestaDetalle"
-
-=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
-
-CREATE CURSOR cObtenido(respuestadetalleestado C(100), respuestadetallemensaje C(100))
-INSERT INTO cObtenido(respuestadetalleestado, respuestadetallemensaje) values("ERROR","")
-
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 11.B", 48,"Atencion")
-	RETURN .F.
-ENDIF
-
-lNombreNodo = "autorizada"
-=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
-
-CREATE CURSOR cObtenido(autorizadacodigoautorizacion C(100))
-INSERT INTO cObtenido(autorizadacodigoautorizacion) VALUES (PADR("123456",100," "))
-
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 11.C", 48,"Atencion")
-	RETURN .F.
-ENDIF
-
-? " Caso 11 con exito "
-
-*********************************** Caso 12 - Solo tomo el valor de un atributo, que es un array de valores simples
-#DEFINE CASO12 12
-
-pcJson= '{'+;
-'"efector":{"codigoProfesion":1,"matricula":987,"libro":"     ","folio":"     "},'+;
-'"prescriptor":{"codigoProfesion":1,"matricula":987,"libro":"     ","folio":"     "},'+;
-'"fechaPrestacion":"18/03/2014",'+;
-'"codigoAfiliado":"3215487",'+;
-'"codigoConvenio":1,'+;
-'"codigoDelegacion":1,'+;
-'"codigoMedioDePago":0,'+;
-'"diagnostico":"",'+;
-'"prestacionSolicitadas":'+;
-'[{"codigoPrestacion":"999999","cantidad":1,"urgencia":false,"motivoSolicitud":"AGUDO","observaciones":"","bono":"321"}]}'
-
-lNombreNodo = "prestacionSolicitadas"
-DIMENSION aTiposDatos[1]
-aTiposDatos[1]=CREATEOBJECT("TipoDato","codigoAfiliado","C(15)")
-
-=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
-
-? " Caso 12 con exito  - HACER EQUALS CURSOR"
-
-******************************************** Caso 13, solo tomo el valor de un atributo, que un array de objects
-
-#DEFINE CASO13 13
-
-pcJson= '{"respuestaComunicacion": {"idTransaccion": 17525,"respuestaBase": {"tiposRespuestaValidacion": "OK","mensaje": ""}},"auditorias": [{'+;
-'"baseAmbulatorio": {"ID": 1128832,"afiliado": {"ID": "000000018107469","nombre": "PIZZIO NESTOR DANIEL","convenio": {"ID": 2,"nombre": "AMR Salud"'+;
-'},"plan": {"ID": 139,"nombre": "PLAN NOVO"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": "     ","folio": "     "},'+;
-'"efector": {"ID": {"codigoProfesion": 1,"matricula": 18765,"libro": "     ","folio": "     "},"nombre": "ABRAHAM MARCELO ELIAS"},"prescriptor": {'+;
-'"ID": {"codigoProfesion": 1,"matricula": 13442,"libro": "     ","folio": "     "},"nombre": "MATELLICANI GUSTAVO ANDRES"},"fechaPrestacion": "2014/10/15"'+;
-'},"prestacionRealizada": {"prestacionSolicitadaBase": {"nomencladorBase": {"codigoNomenclador": "170101","ID": "170101","Nombre": "ELECTROCARDIOGRAMA EN CONSULTORIO"'+;
-'},"cantidad": 1},"importePrestacion": {"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,'+;
-'"derechos": 0.00,"iva": 0.00,"coseguroTexto": "Sin Cargo "}},"estadoAuditoria": "RECHAZADO","comentarioAuditor": "AUTORIZADO E 29/09/2014\rESTEFANIA -ATENCION TELEFONICA",'+;
-'"fechaAutorizacion": "2014/10/15"},{"baseAmbulatorio": {"ID": 1163230,"afiliado": {"ID": "000000043491224","nombre": "GUERRA FLORENCIA LILIANA","convenio": {'+;
-'"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 4,"matricula": 64758,"libro": "     ","folio": "     "},'+;
-'"efector": {"ID": {"codigoProfesion": 1,"matricula": 17223,"libro": "     ","folio": "     "},"nombre": "ALBORNOZ SILVANA ANGELINA"},"prescriptor": {"ID": {"codigoProfesion": 1,'+;
-'"matricula": 17223,"libro": "     ","folio": "     "},"nombre": "ALBORNOZ SILVANA ANGELINA"},"fechaPrestacion": "2014/11/13"},"prestacionRealizada": {"prestacionSolicitadaBase": {'+;
-'"nomencladorBase": {"codigoNomenclador": "300119","ID": "300119","Nombre": "OFTALMOSCOPIA INDIRECTA BINOCULAR CON ESQUEMA DE FONDO DE OJO."},"cantidad": 1},"importePrestacion": {'+;
-'"moneda": {"ID": 1,"nombre": "Pesos"},"coseguro": 0.00,"coseguroIva": 0.00,"coseguroPorcentaje": 0.00,"honorarios": 0.00,"derechos": 0.00,"iva": 0.00,"coseguroTexto": "Sin Cargo "'+;
-'}},"estadoAuditoria": "APROBADO","comentarioAuditor": "\rESTEFANIA -ATENCION TELEFONICA","fechaAutorizacion": "2014/11/13"}]}'
-
-lNombreNodo = "auditorias"
-DIMENSION aTiposDatos[1]
-aTiposDatos[1]=CREATEOBJECT("TipoDato","Baseambulatorioid","N(12)")
-
-=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
-
-? " Caso 13 con exito  - HACER EQUALS CURSOR"
-
-*****************************************  Caso 14 -
-
-#DEFINE CASO14
-
-pcJson = '{"transaccionPrevia":{"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""},"estadoExtra":{"tiposRespuestaValidacion":"OK","mensaje":""}},"transaccionFinalizar":{'+;
-	'"transaccionAutoriza":{"respuestaBase":{"tiposRespuestaValidacion":"APROBADA","mensaje":""},"codigoAutorizacion":"A02-Y38-X30"},'+;
-	'"autorizada":{"baseAmbulatorio":{"ID":"A02-Y38-X30","afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ",'+;
-	'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU"},"plan":{"ID":2,"nombre":"PLAN 2"}},"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
-	'"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
-	'"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
-	'"fechaPrestacion":"2015/01/26"},"prestacionesRealizadas":[{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"420101","ID":"420101","Nombre":"CONSULTA EN CONSULTORIO."},'+;
-	'"cantidad":1},"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,"iva":0.00,'+;
-	'"coseguroTexto":"Sin Cargo"}}],"fechaAutorizacion":1422241200000,"prestadorOriginal":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "}},'+;
-	'"auditorias":[],"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""}}'
-
-DIMENSION aTiposDatosAutorizada[12]
-
-lNombreAtributo = "autorizada"
-
-aTiposDatosAutorizada[1]=CREATEOBJECT("TipoDato","nomencladorbaseid","C(6)")
-aTiposDatosAutorizada[2]=CREATEOBJECT("TipoDato","cantidad","N(4)")
-aTiposDatosAutorizada[3]=CREATEOBJECT("TipoDato","cosegurotexto","C(30)")
-aTiposDatosAutorizada[4]=CREATEOBJECT("TipoDato","coseguro","N(12,2)")
-aTiposDatosAutorizada[5]=CREATEOBJECT("TipoDato","prestadorcodigoprofesion","N(2)")
-aTiposDatosAutorizada[6]=CREATEOBJECT("TipoDato","prestadormatricula","N(8)")
-aTiposDatosAutorizada[7]=CREATEOBJECT("TipoDato","prestadorlibro","C(5)")
-aTiposDatosAutorizada[8]=CREATEOBJECT("TipoDato","prestadorfolio","C(5)")
-aTiposDatosAutorizada[9]=CREATEOBJECT("TipoDato","codigoAutorizacion","C(11)")
-aTiposDatosAutorizada[10]=CREATEOBJECT("TipoDato","plannombre","C(60)")
-aTiposDatosAutorizada[11]=CREATEOBJECT("TipoDato","fechaAutorizacion","N(15)")
-aTiposDatosAutorizada[12]=CREATEOBJECT("TipoDato","baseambulatorioid","C(11)")		
-
-=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatosAutorizada )
-
-? " Caso 14 con exito  - HACER EQUALS CURSOR"
-
-*******************************************************  Caso 15 - Arra y con dos entidades object, tomo el valor de una tributo
-#DEFINE CASO15 15
-
-pcJson='{"transaccionPrevia":{"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""},"estadoExtra":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
-'"transaccionFinalizar":{"transaccionAutoriza":{"respuestaBase":{"tiposRespuestaValidacion":"AUDMED","mensaje":""},"codigoAutorizacion":"A02-Y38-Y20"},'+;
-'"autorizada":null,"auditorias":['+;
-'{"baseAmbulatorio":{"ID":1173785,"afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ                             ",'+;
-'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU                "},"plan":{"ID":2,"nombre":"PLAN 2                             "}},'+;
-'"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
-'"nombre":"MUNIOZ ERNESTO EMILIO"},"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
-'"fechaPrestacion":"2015/01/27"},"prestacionRealizada":{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"150101","ID":"150101",'+;
-'"Nombre":"BIOPSIA POR INCISION O POR PUNCION. (GANGLIO, LESION DE PIEL, TROZO DE OVARIO, CILINDRO DE HIGADO,  "},"cantidad":1},'+;
-'"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,'+;
-'"iva":0.00,"coseguroTexto":"Sin Cargo                     "}},"estadoAuditoria":"PENDIENTE","comentarioAuditor":"","fechaAutorizacion":1422371040734},'+;
-'{"baseAmbulatorio":{"ID":1173786,"afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ                             ",'+;
-'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU                "},"plan":{"ID":2,"nombre":"PLAN 2                             "}},'+;
-'"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
-'"nombre":"MUNIOZ ERNESTO EMILIO"},"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
-'"fechaPrestacion":"2015/01/27"},"prestacionRealizada":{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"150601","ID":"150601",'+;
-'"Nombre":"BIOPSIA POR INCISION O POR PUNCION. (GANGLIO, LESION DE PIEL, TROZO DE OVARIO, CILINDRO DE HIGADO,  "},"cantidad":1},'+;
-'"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,'+;
-'"iva":0.00,"coseguroTexto":"Sin Cargo                     "}},"estadoAuditoria":"PENDIENTE","comentarioAuditor":"","fechaAutorizacion":1422371040734}'+;
-'],'+;
-'"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""}}'
-
-lNombreAtributo = "auditorias"
-
-DIMENSION aTiposDatos[6]
-
-aTiposDatos[1]=CREATEOBJECT("TipoDato","nomencladorbaseid","C(6)")
-aTiposDatos[2]=CREATEOBJECT("TipoDato","cantidad","N(4)")
-aTiposDatos[3]=CREATEOBJECT("TipoDato","cosegurotexto","C(30)")
-aTiposDatos[4]=CREATEOBJECT("TipoDato","coseguro","N(12,2)")
-aTiposDatos[5]=CREATEOBJECT("TipoDato","fechaAutorizacion","N(15)")
-aTiposDatos[6]=CREATEOBJECT("TipoDato","baseambulatorioid","N(12)")
-
-=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatos )
-
-? "Exito Caso de prueba 15 - HACER EQUALS CURSOR"
-
-
-********************** Caso 16 - Columnas con nombres repetidos, array con objetos de entidades con atributos de nombres iguales
-#DEFINE CASO16 16
-
-pcJson='{"lista":[{"efector":{ "id":{"nombre":"german"} },"prescriptor": { "id":{"nombre": "fabricio"}}},'+;
-				'{"efector":{"id":{"nombre":"marcos"}},"prescriptor": { "id":{"nombre": "matias"}}}]}'
-
-DIMENSION aTiposDatos[1]
-
-lNombreAtributo = .F.
-
-=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatos )
-
-CREATE CURSOR cObtenido(idnombre C(100), idnombre1 C(100))
-INSERT INTO cObtenido(idnombre, idnombre1) VALUES(PADR("german",100," "),PADR("fabricio",100," "))
-INSERT INTO cObtenido(idnombre, idnombre1) VALUES(PADR("marcos",100," "),PADR("matias",100," "))
-
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 16", 48,"Atencion")
-	RETURN .F.
-ENDIF
 
 ************************************************************************************************************
 ************************************************************************************************************
@@ -683,9 +721,9 @@ DEFINE CLASS Conversor AS CUSTOM
 		#IF VERSION(5) <= 600
 			SELECT * FROM cDatos INTO CURSOR cDatosDevueltos
 			DO EDITCURS WITH "cDatosDevueltos"
-		ELSE
+		#ELSE
 			SELECT * FROM cDatos INTO CURSOR cDatosDevueltos READWRITE
-		ENDIF
+		#ENDIF
 		
 		SET DATABASE TO (lNombreBaseDatos)
 		CLOSE DATABASE
