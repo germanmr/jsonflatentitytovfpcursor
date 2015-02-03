@@ -7,6 +7,12 @@ SET DEFAULT TO d:\vfp\proyectos\jsonflatentitytovfpcursor
 
 *SET PROCEDURE TO z:\progs\colecciones\coleccionvfpmenorque8 ADDITIVE
 
+* Ver como lo incorporo en un programa mas grande
+* 1) Como accedo a la funcionalidad
+* 2) Manejo de dependencias!!!
+
+* Chequear el rendimiento con cursores de mayor tamaño
+
 CLEAR
 
 LOCAL pcJSON
@@ -674,7 +680,12 @@ DEFINE CLASS Conversor AS CUSTOM
 		ENDIF	
 		
 		* Devuelvo esto asi cierro la base de datos!!
-		SELECT * FROM cDatos INTO CURSOR cDatosDevueltos READWRITE
+		#IF VERSION(5) <= 600
+			SELECT * FROM cDatos INTO CURSOR cDatosDevueltos
+			DO EDITCURS WITH "cDatosDevueltos"
+		ELSE
+			SELECT * FROM cDatos INTO CURSOR cDatosDevueltos READWRITE
+		ENDIF
 		
 		SET DATABASE TO (lNombreBaseDatos)
 		CLOSE DATABASE
@@ -1213,3 +1224,38 @@ PROCEDURE AddProperty(poObject, pcProperty, puValue)
 ENDPROC
 
 
+*!*****************************************************************************
+*!
+*!      Procedure: editcurs
+*!
+*!      Called by: _R160WH417         (procedure in MENU001.MPR)
+*!
+*!*****************************************************************************
+PROCEDURE editcurs
+	PARAMETER lccursoralias
+	SET MESSAGE TO 'Estableciendo el cursor W/R ...'
+	PRIVATE lnworkarea, lctmpdbfname, lctmpcur, lncurrarea
+	IF PARAMETER() = 0
+		lccursoralias = ALIAS()
+	ENDIF
+	lncurrarea = SELECT()
+	SELECT (lccursoralias)
+	lnworkarea = SELECT(0)
+	IF AT(".TMP", DBF()) > 0
+		SELECT 0
+		lctmpdbfname = DBF(lccursoralias)
+		USE (lctmpdbfname) AGAIN
+	ELSE
+		SELECT * FROM (DBF(lccursoralias));
+			INTO CURSOR lctmpcur;
+			WHERE .T.
+		lctmpdbfname = DBF("lcTmpCur")
+	ENDIF
+	USE (lctmpdbfname) AGAIN IN (lnworkarea);
+		ALIAS (lccursoralias)
+	USE
+	SELECT (lncurrarea)
+	RELEASE ALL LIKE lnworkarea, lctmpdbfname, lctmpcur, lncurrarea
+	SET MESSAGE TO
+	RETURN
+ENDPROC
