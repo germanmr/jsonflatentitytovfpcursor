@@ -18,5 +18,6 @@ TODO:
 * Refactorizar para incluir este conversor en un proyecto( inicializar, objeto publico conversor, integrar con rest client, etc )
 * Escribir todo en ingles( codigo, documentacion y demás)?
 * Utilizar el conversor de cursores de qdfoxjson
+* Escapar caracteres con la barra invertida "\"
 
 
