@@ -3,15 +3,9 @@
 * TODO
 * Le puedo pasar un array con los nombres de algunos campos de json y con el tipo de dato????
 
-SET DEFAULT TO d:\vfp\proyectos\jsonflatentitytovfpcursor
+*SET DEFAULT TO d:\vfp\proyectos\jsonflatentitytovfpcursor
 
-*SET PROCEDURE TO z:\progs\colecciones\coleccionvfpmenorque8 ADDITIVE
-
-* Ver como lo incorporo en un programa mas grande
-* 1) Como accedo a la funcionalidad
-* 2) Manejo de dependencias!!!
-
-* Chequear el rendimiento con cursores de mayor tamaño
+SET PROCEDURE TO z:\progs\colecciones\coleccionvfpmenorque8 ADDITIVE
 
 CLEAR
 
@@ -38,21 +32,20 @@ oConversor=CREATEOBJECT("Conversor")
 
 *!*	******************************************** Caso de prueba 2 - Un object que contiene un atributo object
 *!*	#DEFINE CASO2 2
-
 *!*	pcJSON='{"nombre":"German","apellido":"muñoz","telefono":{"descripcion":"Casa","numero":123}}'
 
 *!*	=oConversor.jsonACursor(pcJSON)
 
 *!*	CREATE CURSOR cObtenido(nombre C(100) , apellido Character(100), telefonodescripcion Character(100), telefononumero Numeric(10))
 *!*	INSERT INTO cObtenido(nombre, apellido, telefonodescripcion, telefononumero);
-*!*	VALUES(PADR("German",100," "), PADR("muñoz",100," "), PADR("Casa",100," "),123)
+*!*		VALUES(PADR("German",100," "), PADR("muñoz",100," "), PADR("Casa",100," "),123)
 
 *!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
 *!*		MESSAGEBOX("Fallo el caso de prueba 2", 48,"Atencion")
 *!*		RETURN .F.
 *!*	ENDIF
-
 *!*	? " Caso 2 con exito "
+
 
 *!*	********************************************* Caso de prueba 3 - Un object que contiene un object, que contiene un object
 *!*	#DEFINE CASO3 3
@@ -65,7 +58,7 @@ oConversor=CREATEOBJECT("Conversor")
 *!*	INSERT INTO cObtenido(nombre, apellido, telefonodescripcion, detallecaracteristica, detallenumero );
 *!*		VALUES(PADR("German",100," "), PADR("muñoz",100," "), PADR("Casa",100," "), PADR("314",100," "), PADR("123456",100," "))
 
-*!*		IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
+*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
 *!*		MESSAGEBOX("Fallo el caso de prueba 3", 48,"Atencion")
 *!*		RETURN .F.
 *!*	ENDIF
@@ -98,14 +91,13 @@ oConversor=CREATEOBJECT("Conversor")
 *!*		RETURN .F.
 *!*	ENDIF
 
-*!*		? " Caso 4 con exito "
+*!*	? " Caso 4 con exito "
 
 
 *!*	******************************************** Caso 5 - Un array de object con atributos simples
 *!*	#DEFINE CASO5 5
 
 *!*	pcjson= '{"profesiones":[{"ID":1},{"ID":2},{"ID":3}]}'
-
 *!*	=oConversor.jsonACursor(pcJSON)
 
 *!*	CREATE CURSOR cObtenido(profesionesid N(10))
@@ -124,7 +116,6 @@ oConversor=CREATEOBJECT("Conversor")
 *!*	#DEFINE CASO6 6
 
 *!*	pcjson= '{"profesiones":[{"ID":1,"nombre":"MEDICO"},{"ID":2,"nombre":"FONOAUDIOLOGO"},{"ID":3,"nombre":"KINESIOLOGO"}]}'
-
 *!*	=oConversor.jsonACursor(pcJSON)
 
 *!*	CREATE CURSOR cObtenido(profesionesid N(10), profesionesnombre C(100))
@@ -170,7 +161,7 @@ oConversor=CREATEOBJECT("Conversor")
 *!*	******************************************** Caso 8 - Array con entidades objects anidadas
 *!*	#DEFINE CASO8 8
 
-*!*	pcJson='{"rechazadas": ['+;
+*!*	lJSonRechazada='{"rechazadas": ['+;
 *!*	'{"baseAmbulatorio":{"ID": 320376,"afiliado": {"ID": "00000001234567","nombre": "COSME FULANITO","convenio": {"ID": 2,'+;
 *!*	'"nombre": "AMR Salud"},"plan": {"ID": 51,"nombre": "1000/01"}},"prestador": {"codigoProfesion": 1,"matricula": 99999,"libro": "     ",'+;
 *!*	'"folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 9999,"libro": "     ","folio": "     "},"nombre": "PEPE"},'+;
@@ -193,14 +184,15 @@ oConversor=CREATEOBJECT("Conversor")
 *!*	'}}]'+;
 *!*	'}'
 
-*!*	=oConversor.jsonACursor(pcJson)
+*!*	=oConversor.jsonACursor(lJSonRechazada)
+*!*	BROWSE
 
-*!*	? " Caso 8 con exito  - HACER EQUALS CURSOR"
+*!*	? " Caso 8 con exito "
 
 *!*	******************************************** Caso 9 - Object con array de objectos anidados, con casteo de atributos
 *!*	#DEFINE CASO9 9
 
-*!*	pcJson='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
+*!*	lJsonAutorizada='{"baseAmbulatorio": {"ID": "00000422289","afiliado": {"ID": "0000000321321321","nombre": "COSME FULANITO",'+;
 *!*		'"convenio": {"ID": 2,"nombre": "AMR Salud"},"plan": {"ID": 52,"nombre": "2000/01 - Exento"}},"prestador": {"codigoProfesion": 4,'+;
 *!*		'"matricula": 64758,"libro": "     ","folio": "     "},"efector": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ",'+;
 *!*		'"folio": "     "},"nombre": "DR CHAPATIN"},"prescriptor": {"ID": {"codigoProfesion": 1,"matricula": 4275,"libro": "     ","folio": "     "'+;
@@ -214,9 +206,11 @@ oConversor=CREATEOBJECT("Conversor")
 *!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","afiliadoid","C(15)")
 *!*	aTiposDatos[2]=CREATEOBJECT("TipoDato","coseguroPorcentaje","N(12,2)")
 
-*!*	=oConversor.jsonACursor(pcJson, .F., @aTiposDatos)
+*!*	=oConversor.jsonACursor(lJsonAutorizada, .F., @aTiposDatos)
 
-*!*	? " Caso 9 con exito - HACER EQUALS CURSOR"
+*!*	BROWSE
+
+*!*	? " Caso 9 con exito "
 
 *!*	******************************************** Caso 10 - Entidad con varios niveles de anidamiento pero solo tomo un nodo, con casteo de atributos
 *!*		* Indico el nodo de donde cortar, un solo nivel
@@ -247,7 +241,9 @@ oConversor=CREATEOBJECT("Conversor")
 
 *!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos)
 
-*!*	? " Caso 10 con exito  - HACER EQUALS CURSOR"
+*!*	? " Caso 10 con exito "
+
+*!*	BROWSE
 
 *!*	******************************************** Caso 11, solo tomo valores de atributos de una entidad grande
 *!*	#DEFINE CASO11 11
@@ -261,37 +257,15 @@ oConversor=CREATEOBJECT("Conversor")
 
 *!*	lNombreNodo = "respuestaGeneral"
 *!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
-
-*!*	CREATE CURSOR cObtenido(respuestageneralestado C(100), respuestageneralmensaje C(100))
-*!*	INSERT INTO cObtenido(respuestageneralestado, respuestageneralmensaje) VALUES("OK","" )
-
-*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-*!*		MESSAGEBOX("Fallo el caso de prueba 11.A", 48,"Atencion")
-*!*		RETURN .F.
-*!*	ENDIF
+*!*	BROWSE
 
 *!*	lNombreNodo = "respuestaDetalle"
-
 *!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
-
-*!*	CREATE CURSOR cObtenido(respuestadetalleestado C(100), respuestadetallemensaje C(100))
-*!*	INSERT INTO cObtenido(respuestadetalleestado, respuestadetallemensaje) values("ERROR","")
-
-*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-*!*		MESSAGEBOX("Fallo el caso de prueba 11.B", 48,"Atencion")
-*!*		RETURN .F.
-*!*	ENDIF
+*!*	BROWSE
 
 *!*	lNombreNodo = "autorizada"
 *!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
-
-*!*	CREATE CURSOR cObtenido(autorizadacodigoautorizacion C(100))
-*!*	INSERT INTO cObtenido(autorizadacodigoautorizacion) VALUES (PADR("123456",100," "))
-
-*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-*!*		MESSAGEBOX("Fallo el caso de prueba 11.C", 48,"Atencion")
-*!*		RETURN .F.
-*!*	ENDIF
+*!*	BROWSE
 
 *!*	? " Caso 11 con exito "
 
@@ -315,8 +289,9 @@ oConversor=CREATEOBJECT("Conversor")
 *!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","codigoAfiliado","C(15)")
 
 *!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
+*!*	BROWSE
 
-*!*	? " Caso 12 con exito  - HACER EQUALS CURSOR"
+*!*	? " Caso 12 con exito "
 
 *!*	******************************************** Caso 13, solo tomo el valor de un atributo, que un array de objects
 
@@ -343,8 +318,9 @@ oConversor=CREATEOBJECT("Conversor")
 *!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","Baseambulatorioid","N(12)")
 
 *!*	=oConversor.jsonACursor(pcjson, lNombreNodo, @aTiposDatos )
+*!*	BROWSE
 
-*!*	? " Caso 13 con exito  - HACER EQUALS CURSOR"
+*!*	? " Caso 13 con exito "
 
 *!*	*****************************************  Caso 14 -
 
@@ -361,7 +337,7 @@ oConversor=CREATEOBJECT("Conversor")
 *!*		'"coseguroTexto":"Sin Cargo"}}],"fechaAutorizacion":1422241200000,"prestadorOriginal":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "}},'+;
 *!*		'"auditorias":[],"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""}}'
 
-*!*	DIMENSION aTiposDatosAutorizada[12]
+*!*	LOCAL ARRAY aTiposDatosAutorizada[12]
 
 *!*	lNombreAtributo = "autorizada"
 
@@ -380,108 +356,52 @@ oConversor=CREATEOBJECT("Conversor")
 
 *!*	=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatosAutorizada )
 
-*!*	? " Caso 14 con exito  - HACER EQUALS CURSOR"
+*!*	BROWSE
 
-*!*	*******************************************************  Caso 15 - Arra y con dos entidades object, tomo el valor de una tributo
-*!*	#DEFINE CASO15 15
+*!*	? " Caso 14 con exito "
 
-*!*	pcJson='{"transaccionPrevia":{"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""},"estadoExtra":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
-*!*	'"transaccionFinalizar":{"transaccionAutoriza":{"respuestaBase":{"tiposRespuestaValidacion":"AUDMED","mensaje":""},"codigoAutorizacion":"A02-Y38-Y20"},'+;
-*!*	'"autorizada":null,"auditorias":['+;
-*!*	'{"baseAmbulatorio":{"ID":1173785,"afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ                             ",'+;
-*!*	'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU                "},"plan":{"ID":2,"nombre":"PLAN 2                             "}},'+;
-*!*	'"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
-*!*	'"nombre":"MUNIOZ ERNESTO EMILIO"},"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
-*!*	'"fechaPrestacion":"2015/01/27"},"prestacionRealizada":{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"150101","ID":"150101",'+;
-*!*	'"Nombre":"BIOPSIA POR INCISION O POR PUNCION. (GANGLIO, LESION DE PIEL, TROZO DE OVARIO, CILINDRO DE HIGADO,  "},"cantidad":1},'+;
-*!*	'"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,'+;
-*!*	'"iva":0.00,"coseguroTexto":"Sin Cargo                     "}},"estadoAuditoria":"PENDIENTE","comentarioAuditor":"","fechaAutorizacion":1422371040734},'+;
-*!*	'{"baseAmbulatorio":{"ID":1173786,"afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ                             ",'+;
-*!*	'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU                "},"plan":{"ID":2,"nombre":"PLAN 2                             "}},'+;
-*!*	'"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
-*!*	'"nombre":"MUNIOZ ERNESTO EMILIO"},"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
-*!*	'"fechaPrestacion":"2015/01/27"},"prestacionRealizada":{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"150601","ID":"150601",'+;
-*!*	'"Nombre":"BIOPSIA POR INCISION O POR PUNCION. (GANGLIO, LESION DE PIEL, TROZO DE OVARIO, CILINDRO DE HIGADO,  "},"cantidad":1},'+;
-*!*	'"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,'+;
-*!*	'"iva":0.00,"coseguroTexto":"Sin Cargo                     "}},"estadoAuditoria":"PENDIENTE","comentarioAuditor":"","fechaAutorizacion":1422371040734}'+;
-*!*	'],'+;
-*!*	'"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""}}'
+*******************************************************  Caso 15 - Arra y con dos entidades object, tomo el valor de una tributo
+#DEFINE CASO15 15
 
-*!*	lNombreAtributo = "auditorias"
+pcJson='{"transaccionPrevia":{"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""},"estadoExtra":{"tiposRespuestaValidacion":"OK","mensaje":""}},'+;
+'"transaccionFinalizar":{"transaccionAutoriza":{"respuestaBase":{"tiposRespuestaValidacion":"AUDMED","mensaje":""},"codigoAutorizacion":"A02-Y38-Y20"},'+;
+'"autorizada":null,"auditorias":['+;
+'{"baseAmbulatorio":{"ID":1173785,"afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ                             ",'+;
+'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU                "},"plan":{"ID":2,"nombre":"PLAN 2                             "}},'+;
+'"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
+'"nombre":"MUNIOZ ERNESTO EMILIO"},"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
+'"fechaPrestacion":"2015/01/27"},"prestacionRealizada":{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"150101","ID":"150101",'+;
+'"Nombre":"BIOPSIA POR INCISION O POR PUNCION. (GANGLIO, LESION DE PIEL, TROZO DE OVARIO, CILINDRO DE HIGADO,  "},"cantidad":1},'+;
+'"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,'+;
+'"iva":0.00,"coseguroTexto":"Sin Cargo                     "}},"estadoAuditoria":"PENDIENTE","comentarioAuditor":"","fechaAutorizacion":1422371040734},'+;
+'{"baseAmbulatorio":{"ID":1173786,"afiliado":{"ID":"1234           ","nombre":"CARLA GOMEZ                             ",'+;
+'"convenio":{"ID":26,"nombre":"EN DESARROLLO - PRU                "},"plan":{"ID":2,"nombre":"PLAN 2                             "}},'+;
+'"prestador":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"efector":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},'+;
+'"nombre":"MUNIOZ ERNESTO EMILIO"},"prescriptor":{"ID":{"codigoProfesion":1,"matricula":4275,"libro":"     ","folio":"     "},"nombre":"MUNIOZ ERNESTO EMILIO"},'+;
+'"fechaPrestacion":"2015/01/27"},"prestacionRealizada":{"prestacionSolicitadaBase":{"nomencladorBase":{"codigoNomenclador":"150601","ID":"150601",'+;
+'"Nombre":"BIOPSIA POR INCISION O POR PUNCION. (GANGLIO, LESION DE PIEL, TROZO DE OVARIO, CILINDRO DE HIGADO,  "},"cantidad":1},'+;
+'"importePrestacion":{"moneda":{"ID":0,"nombre":"Ninguna"},"coseguro":0.00,"coseguroIva":0.00,"coseguroPorcentaje":0.00,"honorarios":0.00,"derechos":0.00,'+;
+'"iva":0.00,"coseguroTexto":"Sin Cargo                     "}},"estadoAuditoria":"PENDIENTE","comentarioAuditor":"","fechaAutorizacion":1422371040734}'+;
+'],'+;
+'"respuestaBase":{"tiposRespuestaValidacion":"OK","mensaje":""}},"estadoGeneral":{"tiposRespuestaValidacion":"OK","mensaje":""}}'
 
-*!*	DIMENSION aTiposDatos[6]
+LOCAL ARRAY aTiposDatos[6]
 
-*!*	aTiposDatos[1]=CREATEOBJECT("TipoDato","nomencladorbaseid","C(6)")
-*!*	aTiposDatos[2]=CREATEOBJECT("TipoDato","cantidad","N(4)")
-*!*	aTiposDatos[3]=CREATEOBJECT("TipoDato","cosegurotexto","C(30)")
-*!*	aTiposDatos[4]=CREATEOBJECT("TipoDato","coseguro","N(12,2)")
-*!*	aTiposDatos[5]=CREATEOBJECT("TipoDato","fechaAutorizacion","N(15)")
-*!*	aTiposDatos[6]=CREATEOBJECT("TipoDato","baseambulatorioid","N(12)")
+lNombreAtributo = "auditorias"
 
-*!*	=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatos )
+aTiposDatos[1]=CREATEOBJECT("TipoDato","nomencladorbaseid","C(6)")
+aTiposDatos[2]=CREATEOBJECT("TipoDato","cantidad","N(4)")
+aTiposDatos[3]=CREATEOBJECT("TipoDato","cosegurotexto","C(30)")
+aTiposDatos[4]=CREATEOBJECT("TipoDato","coseguro","N(12,2)")
+aTiposDatos[5]=CREATEOBJECT("TipoDato","fechaAutorizacion","N(15)")
+aTiposDatos[6]=CREATEOBJECT("TipoDato","baseambulatorioid","N(12)")
 
-*!*	? "Exito Caso de prueba 15 - HACER EQUALS CURSOR"
+=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatos )
 
-
-*!*	********************** Caso 16 - Columnas con nombres repetidos, array con objetos de entidades con atributos de nombres iguales
-*!*	#DEFINE CASO16 16
-
-*!*	pcJson='{"lista":[{"efector":{ "id":{"nombre":"german"} },"prescriptor": { "id":{"nombre": "fabricio"}}},'+;
-*!*					'{"efector":{"id":{"nombre":"marcos"}},"prescriptor": { "id":{"nombre": "matias"}}}]}'
-
-*!*	DIMENSION aTiposDatos[1]
-
-*!*	lNombreAtributo = .F.
-
-*!*	=oConversor.jsonACursor( pcjson, lNombreAtributo, @aTiposDatos )
-
-*!*	CREATE CURSOR cObtenido(idnombre C(100), idnombre1 C(100))
-*!*	INSERT INTO cObtenido(idnombre, idnombre1) VALUES(PADR("german",100," "),PADR("fabricio",100," "))
-*!*	INSERT INTO cObtenido(idnombre, idnombre1) VALUES(PADR("marcos",100," "),PADR("matias",100," "))
-
-*!*	IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-*!*		MESSAGEBOX("Fallo el caso de prueba 16", 48,"Atencion")
-*!*		RETURN .F.
-*!*	ENDIF
-
-
-******************************************** Caso 5 - Un array de object con atributos simples
-#DEFINE CASO17 17
-
-LOCAL i
-pcjson= '{"profesiones":['
-
-FOR i = 1 TO 10000
-	pcjson = pcjson + '{"ID":'+ALLTRIM(STR(i)) + '}' + IIF(I=10000,'',',')
-ENDFOR
-pcjson = pcjson + ']}'
-
-CREATE CURSOR vamosaver(campo memo)
-INSERT INTO vamosaver(campo) VALUES(pcjson)
 BROWSE
 
-lInicio = DATETIME()
-?lInicio
-=oConversor.jsonACursor(pcJSON)
 
-lFinal = DATETIME()
-?lFinal
-? "Duracion"
-? lFinal - lInicio
-
-CREATE CURSOR cObtenido(profesionesid N(10))
-FOR i = 1 TO 10000
-	INSERT INTO cObtenido(profesionesid) VALUES(I)
-ENDFOR
-
-IF !equalsCursor("cDatosDevueltos","cObtenido") THEN
-	MESSAGEBOX("Fallo el caso de prueba 17", 48,"Atencion")
-	RETURN .F.
-ENDIF
-
-? " Caso 5 con exito "
-
-
+************************************************************************************************************
 ************************************************************************************************************
 ************************************************************************************************************
 ************************************************************************************************************
@@ -503,8 +423,6 @@ DEFINE CLASS Conversor AS CUSTOM
 	verbose=.F.
 	DIMENSION acampos[1]
 	
-	coleccionCampos=.NULL.
-	
 	PROCEDURE inicializaratributos()
 			THIS.estoyenarray=.F.
 			THIS.columnacreada=.F.
@@ -514,8 +432,6 @@ DEFINE CLASS Conversor AS CUSTOM
 			THIS.agregoregistro=.F.
 			THIS.nodoBuscado = ""
 			THIS.nodoEncontrado = .NULL.
-			THIS.coleccionCampos=CREATEOBJECT("Collection")
-			
 			* Seteos basicos e importantes!!!!!
 			SET SAFETY OFF
 			SET EXACT ON
@@ -530,7 +446,11 @@ DEFINE CLASS Conversor AS CUSTOM
 		THIS.verbose = pVerbose
 		
 		THIS.inicializaratributos()
-
+		
+		* Limpio el json(precondiciones)
+		* Saco los caracteres que no se aguanta el framework
+		pcjson=STRTRAN(pcjson,"'","")
+		
 		IF VARTYPE(pNombreNodo)="L" THEN
 			THIS.jsonToCursor( pcjson )
 		ELSE
@@ -691,7 +611,7 @@ DEFINE CLASS Conversor AS CUSTOM
 		IF FILE(THIS.nombreCursor + ".dbf") THEN && 
 			IF USED(THIS.nombrecursor) THEN && Cierro el alias asi luego lo borro
 				LOCAL lNombreCursor
-				lNombreCursor = THIS.nombrecursor
+				lNombreCursor=ALLTRIM(THIS.nombrecursor)
 				SELECT &lNombreCursor.
 				USE
 			ENDIF
@@ -716,14 +636,9 @@ DEFINE CLASS Conversor AS CUSTOM
 			lSentencia = "ALTER TABLE " + THIS.nombrecursor  + " DROP COLUMN campo1"
 			&lSentencia
 		ENDIF	
-		
-		* Devuelvo esto asi cierro la base de datos!!
-		#IF VERSION(5) <= 600
-			SELECT * FROM cDatos INTO CURSOR cDatosDevueltos
-			DO EDITCURS WITH "cDatosDevueltos"
-		#ELSE
-			SELECT * FROM cDatos INTO CURSOR cDatosDevueltos READWRITE
-		#ENDIF
+
+		* Devuelvo esto asi cierro la base da datos!!
+		SELECT * FROM cDatos INTO CURSOR cDatosDevueltos
 		
 		SET DATABASE TO (lNombreBaseDatos)
 		CLOSE DATABASE
@@ -767,18 +682,17 @@ DEFINE CLASS Conversor AS CUSTOM
 
 			IF lIsArray AND THIS.IsObject(cObj)
 				* Aca Tiene un objeto del array
-				*IF THIS.estoyenarray AND !THIS.columnacreada THEN
-				*	THIS.columnacreada=.F.
-				*ENDIF
+				IF THIS.estoyenarray AND !THIS.columnacreada THEN
+					THIS.columnacreada=.F.
+				ENDIF
 
 				LOCAL lNombreCursor
 				lNombreCursor= THIS.nombrecursor
 				SELECT &lNombreCursor.
-				
+
 				* Si hay un registro no toco nada, si no hay registros tengo que agregar
 				IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor) > 0 THEN
 					APPEND BLANK
-					THIS.coleccionCampos=CREATEOBJECT("collection")
 					THIS.agregoregistro=.F.
 				ELSE
 					IF RECCOUNT(THIS.nombrecursor) = 0 THEN
@@ -824,7 +738,13 @@ DEFINE CLASS Conversor AS CUSTOM
 					CASE LEFT(cValue,1) $ ['"]    && String value
 						uValue = THIS._decodeString( LEFT(SUBSTR(cValue,2),LEN(cValue) - 2) )
 						uValue = "'" + uValue + "'"
-						lTipoDato="C(100)"
+						
+						* Si pasa los 254 es memo!!!
+						IF LEN(cValue)<252 THEN
+							lTipoDato="C(100)"
+						ELSE
+							lTipoDato="MEMO"
+						ENDIF
 	               
 					CASE LEFT(cValue,1) = [@]   && Date/DateTime
 						* THIS.formatofecha???
@@ -846,7 +766,9 @@ DEFINE CLASS Conversor AS CUSTOM
 						lTipoDato="logical"
 
 					CASE UPPER(cValue) == "NULL" OR UPPER(cValue) == ".NULL." && Null value  &&  cesar
-						uValue = ".NULL."
+						*uValue = ".NULL."
+						uValue = '.NULL.'
+						lTipoDato="C(100) NULL"
 	                
 					CASE LEFT(cValue,1) = [{]   && Object
 						* Agrego a menos que este adentro de otro objeto??
@@ -863,18 +785,14 @@ DEFINE CLASS Conversor AS CUSTOM
 						THIS.estoyenarray=.T.
 						THIS.columnacreada=.F.
 						THIS.nombreprefijo= cProp
-						
 						LOCAL lNombreCursor
 						lNombreCursor= THIS.nombrecursor
 						SELECT &lNombreCursor.
-						
 						GO TOP
-						
 						* Si hay un registro no toco nada
 						uValue = THIS.parse(cValue)
 						THIS.columnacreada=.F.
 						THIS.nombreprefijo=""
-						
 						* No tengo que hacer mas nada luego abajo de salir del array
 						LOOP
 
@@ -885,7 +803,7 @@ DEFINE CLASS Conversor AS CUSTOM
 						lTipoDato = "N(10)"
 
 				ENDCASE
-				
+
 				LOCAL lSentencia, lNombreCursor, lTipoDatoForzado, lNombreColumna, lSufijo
 				
 				lNombrecolumna = THIS.obtenerNombreUnicoColumna( cProp )
@@ -905,10 +823,7 @@ DEFINE CLASS Conversor AS CUSTOM
 				
 					lSufijo = ""
 					
-					LOCAL lExisteColumna
-					lExisteColumna = THIS.existeColumna(lNombreColumna)
-					
-					IF !THIS.columnacreada AND !lExisteColumna THEN
+					IF !THIS.columnacreada THEN
 						lSentencia="ALTER TABLE " + THIS.nombrecursor + " ADD COLUMN " + lNombreColumna + " " + lTipoDato
 						&lSentencia
 					ENDIF
@@ -922,18 +837,40 @@ DEFINE CLASS Conversor AS CUSTOM
 
 					IF THIS.agregoregistro AND RECCOUNT(THIS.nombrecursor)=0 THEN
 						APPEND BLANK
-						THIS.coleccionCampos=CREATEOBJECT("collection")
 						THIS.agregoregistro=.F.
 					ENDIF
 					
 				ENDIF
 				
-				* El campo debe existir el valor a asignar debe serigual que el tipo de dato del campo
-				LOCAL lTipoValorValue
-				lTipoValorValue = VARTYPE(uValue)
+				LOCAL lValorReemplazo
+				lValorReemplazo=uValue
 				
-				lSentencia="REPLACE " + lNombreColumna + " WITH " + uValue
-				&lSentencia
+				* Si la cadena es menor que 256 no hay problemas
+				IF LEN(ALLTRIM(uValue))<256 THEN
+					lSentencia="REPLACE " + lNombreColumna + " WITH " + lValorReemplazo
+					&lSentencia				
+				ELSE
+					LOCAL lInicioCadena, lFinCadena,lTamanioSegmento, lSegmento, i, lIteraciones
+					lTamanioSegmento=200
+					lInicioCadena=1
+					lFinCadena=lTamanioSegmento
+					* Si la cadena es mayor a 256,
+					* tenemos que iterar porque se rompe la macrosubstitucion con cadenas largas!!!
+					* Limpiamos las comillas
+					lValorReemplazo=LEFT(SUBSTR(lValorReemplazo,2),LEN(lValorReemplazo) - 2)	
+					*Tomo la cantidad segmentos
+					lIteraciones=CEILING(LEN(lValorReemplazo)/lTamanioSegmento)
+					FOR i=1 TO lIteraciones
+						* Tomamos los primeros 200 caracteres
+						lSegmento="'" + SUBST(lValorReemplazo,lInicioCadena,lFinCadena) + "'"
+						lSentencia="REPLACE " + lNombreColumna + " WITH " + lNombreColumna + " + " + lSegmento
+						&lSentencia
+						*La siguiente iteracion
+						lInicioCadena=lTamanioSegmento * i
+						lFinCadena=lInicioCadena + lTamanioSegmento
+					ENDFOR
+
+				ENDIF
 
 			ENDFOR
 	      
@@ -1029,82 +966,44 @@ DEFINE CLASS Conversor AS CUSTOM
 		RETURN VARTYPE(pcString)="C" AND LEFT(pcString,1)="{" AND RIGHT(pcString,1)="}"
 	ENDPROC
 
-	HIDDEN PROCEDURE obtenerNombreUnicoColumna
+	PROCEDURE obtenerNombreUnicoColumna
 			LPARAMETERS pNombreColumna
 			
 			LOCAL ARRAY aCampos[1]
-			LOCAL lNombreColumna, lNombreCursor, lCantidadCampos, lRepeticiones, columna, lCampoEncontrado
+			LOCAL lNombreColumna, lNombreCursor, lCantidadCampos, lRepeticiones, lIndice, lCampoEncontrado
 			
 			lNombreColumna = ALLTRIM(THIS.nombreprefijo) + ALLTRIM(pNombreColumna)
 			
-			* Tomo el array de la colecion de campos no de la tabla en si
 			lNombreCursor = THIS.nombrecursor
 			SELECT &lNombreCursor.
 
-			*lCantidadCampos=AFIELDS(aCampos,THIS.nombrecursor)
+			lCantidadCampos=AFIELDS(aCampos,THIS.nombrecursor)
 			lRepeticiones = 0
 
-*!*				* Si ya se creo la columna siempre va a encontrar la columna con numero mayor creado
-*!*				FOR lIndice=1 TO lCantidadCampos
-*!*					* Tengo que buscar el nombre del campo con las repeticiones que tenga
-*!*					* Si ya se repitio supongo asumo que fue creado con el numero de repeticion en el nombre
-*!*					LOCAL lCampoABuscar
-*!*					lCampoABuscar =  LOWER(ALLTRIM(lNombreColumna) + IIF(lRepeticiones>0, ALLTRIM(STR(lRepeticiones)),""))
-
-*!*					IF lCampoABuscar = LOWER(aCampos[lIndice,1])  THEN
-*!*						lRepeticiones = lRepeticiones + 1
-*!*					ENDIF
-*!*				ENDFOR
-
-			* Si ya se creo la columna siempre va a encontrar la columna con numero mayor creado
-			FOR EACH columna IN THIS.coleccionCampos
+			FOR lIndice=1 TO lCantidadCampos
 				* Tengo que buscar el nombre del campo con las repeticiones que tenga
 				* Si ya se repitio supongo asumo que fue creado con el numero de repeticion en el nombre
 				LOCAL lCampoABuscar
 				lCampoABuscar =  LOWER(ALLTRIM(lNombreColumna) + IIF(lRepeticiones>0, ALLTRIM(STR(lRepeticiones)),""))
 
-				IF lCampoABuscar = LOWER(columna)  THEN
+				IF lCampoABuscar = LOWER(aCampos[lIndice,1])  THEN
 					lRepeticiones = lRepeticiones + 1
 				ENDIF
 			ENDFOR
 
 			* Si estoy en un array no le sumo 1
 			IF lRepeticiones > 0 THEN
-				*IF THIS.columnacreada THEN
-					*lRepeticiones = lRepeticiones - 1
-				*ENDIF
-				lNombreColumna = lNombreColumna + IIF(lRepeticiones= 0,"",ALLTRIM(STR(lRepeticiones)))
-			ENDIF
-			
-			THIS.coleccionCampos.ADD(lNombreColumna)
-			
-			RETURN lNombreColumna
-
-	ENDPROC
-	
-	HIDDEN PROCEDURE existeColumna(pNombreColumna)
-			
-			LOCAL ARRAY aCampos[1]
-			LOCAL lNombreCursor, lCantidadCampos, lIndice, lNombreColumna, lCampoABuscar
-			
-			* Tomo el array de la colecion de campos no de la tabla en si
-			lNombreCursor = THIS.nombrecursor
-			SELECT &lNombreCursor.
-
-			lCantidadCampos=AFIELDS(aCampos,THIS.nombrecursor)
-			* Si ya se creo la columna siempre va a encontrar la columna con numero mayor creado
-			FOR lIndice=1 TO lCantidadCampos
-				
-				IF LOWER(ALLTRIM(pNombreColumna)) = LOWER(aCampos[lIndice,1])  THEN
-					RETURN .T.
+				IF THIS.columnacreada THEN
+					lRepeticiones = lRepeticiones - 1
 				ENDIF
+				RETURN lNombreColumna + IIF(lRepeticiones= 0,"",ALLTRIM(STR(lRepeticiones)))
+			ELSE
+				RETURN lNombreColumna
+			ENDIF
 
-			ENDFOR
-			
-			RETURN .F.
 	ENDPROC
 	
-	HIDDEN PROCEDURE obtenerTipoDato(pNombreCampo)
+	PROCEDURE obtenerTipoDato(pNombreCampo)
 		
 		LOCAL campo
 		
@@ -1124,29 +1023,6 @@ DEFINE CLASS Conversor AS CUSTOM
 		RETURN ""
 	
 	ENDPROC
-	
-	HIDDEN PROCEDURE precondicionAsignacion(pNombrecolumna, pValor)
-	
-		LOCAL ARRAY aCampos[1]
-		LOCAL lCantidadCampos, i, lTipoDatoValor
-		
-		
-		lTipoDatoValor = VARTYPE(pValor)
-		
-		lCantidadCampos = AFIELDS(aCampos,THIS.nombrecursor)
-		
-		FOR i= 1 TO lCantidadCampos
-			IF LOWER(pNombrecolumna) = LOWER(aCampos[i,1]) THEN
-				IF lTipoDatoValor <> aCampos[i,2] THEN
-					? "Tipo dato del campo: " + aCampos[i,1] + " tipo: " + aCampos[i,2] + " disinto de " + lTipoDatoValor
-					RETURN .F.
-				ENDIF
-				
-			ENDIF
-		ENDFOR
-		
-	ENDPROC
-	
 
 
 ENDDEFINE
@@ -1262,38 +1138,3 @@ PROCEDURE AddProperty(poObject, pcProperty, puValue)
 ENDPROC
 
 
-*!*****************************************************************************
-*!
-*!      Procedure: editcurs
-*!
-*!      Called by: _R160WH417         (procedure in MENU001.MPR)
-*!
-*!*****************************************************************************
-PROCEDURE editcurs
-	PARAMETER lccursoralias
-	SET MESSAGE TO 'Estableciendo el cursor W/R ...'
-	PRIVATE lnworkarea, lctmpdbfname, lctmpcur, lncurrarea
-	IF PARAMETER() = 0
-		lccursoralias = ALIAS()
-	ENDIF
-	lncurrarea = SELECT()
-	SELECT (lccursoralias)
-	lnworkarea = SELECT(0)
-	IF AT(".TMP", DBF()) > 0
-		SELECT 0
-		lctmpdbfname = DBF(lccursoralias)
-		USE (lctmpdbfname) AGAIN
-	ELSE
-		SELECT * FROM (DBF(lccursoralias));
-			INTO CURSOR lctmpcur;
-			WHERE .T.
-		lctmpdbfname = DBF("lcTmpCur")
-	ENDIF
-	USE (lctmpdbfname) AGAIN IN (lnworkarea);
-		ALIAS (lccursoralias)
-	USE
-	SELECT (lncurrarea)
-	RELEASE ALL LIKE lnworkarea, lctmpdbfname, lctmpcur, lncurrarea
-	SET MESSAGE TO
-	RETURN
-ENDPROC
