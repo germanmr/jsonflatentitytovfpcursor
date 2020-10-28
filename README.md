@@ -3,6 +3,37 @@
 Objetivo:
 Convertir Entidades con jerarquia en formato json a entidades planas en cursores de VFP
 
+E.G:
+Country with states
+
+```
+{
+"code":1,"
+"name":"Argentina",
+"states": [
+    {
+    "code":1,
+    "name":"Santa Fe"
+    },
+    {
+    "code":2,"
+    "name":"Jujuy"
+    },
+    {
+    "code":3,"
+    "name":"Cordoba"
+    }
+  ]
+}
+```
+VFP Cursor Created:
+```
+code   name           statescode  statesname
+  1     Argentina         1         Santa Fe
+  1     Argentina         2         Jujuy
+  1     Argentina         3         Cordoba
+```
+
 DONE:
 * Convertir entidades SIN json Arrays
 * Convertir entidades con json Arrays
