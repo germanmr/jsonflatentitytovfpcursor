@@ -1,7 +1,6 @@
 # jsonflatentitytovfpcursor
 
-Objetivo:
-Convertir Entidades con jerarquia en formato json a entidades planas en cursores de VFP
+JSON -> VFP CURSOR!
 
 E.G:
 Country with states
@@ -35,10 +34,10 @@ code   name           statescode  statesname
 ```
 
 DONE:
-* Convertir entidades SIN json Arrays
-* Convertir entidades con json Arrays
-* Asignar el tipo de dato en el cursor de la entidad obtenida
-* Obtener el valor de un atributo adentro de una entidad json
+* Conversion of entities without json arrays
+* Conversion of entities with json arrays
+* Create the correct data type on the cursor from the json
+* Assign the correct value from the json entity into the cursor
 
 TODO:
 * Convertir entidades con json arrays anidados
