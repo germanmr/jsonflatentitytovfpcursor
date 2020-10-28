@@ -1,5 +1,7 @@
 # jsonflatentitytovfpcursor
 
+FLATTENING JSON ENTITIES
+
 JSON -> VFP CURSOR!
 
 E.G:
