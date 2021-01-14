@@ -42,14 +42,15 @@ DONE:
 * Assign the correct value from the json entity into the cursor
 
 TODO:
-* Convertir entidades con json arrays anidados
-* Refactorizar para separar casos de prueba de la definicion de las clases de conversion
-* Unir con qdfoxjson?
-* limpiar archivos del proyecto
-* Hacer un equals para cursores y clases( indicar que propiedades comparamos? )
-* Refactorizar para incluir este conversor en un proyecto( inicializar, objeto publico conversor, integrar con rest client, etc )
-* Escribir todo en ingles( codigo, documentacion y demás)?
-* Utilizar el conversor de cursores de qdfoxjson
-* Escapar caracteres con la barra invertida "\"
+* Convert entityes with nested arrays
+* Divide and conquer: refactor so that individual pieces of the code can be unit tested
+* Join with qdfoxjson?
+* Remove new projects files
+* Make equals method for classes vs VFP cursors, indicate what properties we compare ( Because of all extra vfp properties! )
+* 
+* Refactor to include this converter in a project (initialize, converter public object, integrate with rest client, etc)
+* Translate everything to english
+* Use qdfoxjson cursor conversor for vfp
+* More character scaping ( E.G.: "\" )
 
 
